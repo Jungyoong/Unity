@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerController : MonoBehaviour
 
     public bool sprintMode = false;
 
+    public bool doubleJump = false;
     [Header("Movement Settings")]
     public float speed = 10.0f;
     public float sprintMultiplier = 2.5f;
@@ -69,7 +71,7 @@ public class PlayerController : MonoBehaviour
 
 
         if (!sprintMode)
-            temp.x = Input.GetAxisRaw("Vertical") * speed;
+            temp.x = Input.GetAxisRaw("Vertical") * speed;       
 
         if (sprintMode)
             temp.x = Input.GetAxisRaw("Vertical") * speed * sprintMultiplier;
@@ -80,6 +82,21 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
         {
             temp.y = jumpHeight;
+
+            if (Input.GetKeyUp(KeyCode.Space))
+
+                doubleJump = true;
+
+                if (Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
+
+                    doubleJump = false;
+
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && doubleJump)
+        {
+            temp.y = jumpHeight;
+
+            doubleJump = false;
         }
 
         myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
