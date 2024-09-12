@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
 
     public bool sprintMode = false;
 
-    public bool doubleJump = false;
+    public int doubleJump = 0;
     [Header("Movement Settings")]
     public float speed = 10.0f;
     public float sprintMultiplier = 2.5f;
@@ -79,24 +79,17 @@ public class PlayerController : MonoBehaviour
         temp.z = Input.GetAxisRaw("Horizontal") * speed;
 
         
-        if (Input.GetKeyDown(KeyCode.Space) && Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
+        if (Input.GetKeyDown(KeyCode.Space) && doubleJump < 2) 
         {
             temp.y = jumpHeight;
 
-            if (Input.GetKeyUp(KeyCode.Space))
+            doubleJump += 1;
 
-                doubleJump = true;
+        
+        if (doubleJump > 0 && Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
 
-                if (Physics.Raycast(transform.position, -transform.up, groundDetectDistance))
+            doubleJump = 0;
 
-                    doubleJump = false;
-
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && doubleJump)
-        {
-            temp.y = jumpHeight;
-
-            doubleJump = false;
         }
 
         myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
