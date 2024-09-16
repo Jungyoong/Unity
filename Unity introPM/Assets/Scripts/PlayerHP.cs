@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerHP : MonoBehaviour
 {
-
+    public Transform weaponSlot;
+    public int healthRestore = 20;
     public int maxHealth = 100;
     public int currentHealth;
 
@@ -24,6 +25,11 @@ public class PlayerHP : MonoBehaviour
         {
             TakeDamage(20);
         }
+        if (currentHealth < 0)
+        {
+            currentHealth = 0;
+            healthBar.SetHealth(currentHealth);
+        }
     }
 
     void TakeDamage(int damage)
@@ -31,5 +37,24 @@ public class PlayerHP : MonoBehaviour
         currentHealth -= damage;
 
         healthBar.SetHealth(currentHealth);
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if(collider.gameObject.tag == "weapon")
+            collider.gameObject.transform.SetParent(weaponSlot);
+
+
+        if((currentHealth < maxHealth) && collider.gameObject.tag == "healthPickup")
+        {
+            currentHealth += healthRestore;
+
+            healthBar.SetHealth(currentHealth);
+
+            if (currentHealth > maxHealth)
+                currentHealth = maxHealth;
+            
+            Destroy(collider.gameObject);
+        }
     }
 }

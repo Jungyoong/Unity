@@ -10,8 +10,12 @@ public class PlayerController : MonoBehaviour
 
     Vector2 camRotation;
 
+
     public bool sprintMode = false;
     private bool isGrounded;
+
+    [Header("Weapon Stats")]
+    public bool canFire = true;
 
     public int doubleJump = 0;
     [Header("Movement Settings")]
@@ -91,5 +95,14 @@ public class PlayerController : MonoBehaviour
         }
 
         myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
+
+
     }
+
+    IEnumerator cooldown(float time)
+    {
+        yield return new WaitForSeconds(time);
+        canFire = true;
+    }
+
 }
