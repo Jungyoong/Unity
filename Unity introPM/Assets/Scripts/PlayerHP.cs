@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerHP : MonoBehaviour
 {
-    public Transform weaponSlot;
     public int healthRestore = 20;
     public int maxHealth = 100;
     public int currentHealth;
@@ -41,10 +40,6 @@ public class PlayerHP : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if(collider.gameObject.tag == "weapon")
-            collider.gameObject.transform.SetParent(weaponSlot);
-
-
         if((currentHealth < maxHealth) && collider.gameObject.tag == "healthPickup")
         {
             currentHealth += healthRestore;

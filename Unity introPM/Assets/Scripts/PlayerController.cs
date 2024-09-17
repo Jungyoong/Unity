@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
     public bool sprintMode = false;
     private bool isGrounded;
 
-    [Header("Weapon Stats")]
-    public bool canFire = true;
 
     public int doubleJump = 0;
     [Header("Movement Settings")]
@@ -84,9 +82,16 @@ public class PlayerController : MonoBehaviour
 
         temp.z = Input.GetAxisRaw("Horizontal") * speed;
 
-    
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+
+        }
+
+
         if (isGrounded)
+        {
             doubleJump = 0;
+        }    
 
         if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || doubleJump < 1)) 
         {
@@ -96,13 +101,7 @@ public class PlayerController : MonoBehaviour
 
         myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
 
-
     }
 
-    IEnumerator cooldown(float time)
-    {
-        yield return new WaitForSeconds(time);
-        canFire = true;
-    }
 
 }
