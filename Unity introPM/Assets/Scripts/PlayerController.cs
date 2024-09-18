@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public DashBar dashBar;
     private Rigidbody myRB;
-    Camera PlayerCam;
+    public Camera playerCam;
 
     Vector2 camRotation;
 
@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
        myRB = GetComponent<Rigidbody>();
-       PlayerCam = transform.GetChild(0).GetComponent<Camera>();
+       playerCam = transform.GetChild(0).GetComponent<Camera>();
 
        camRotation = Vector2.zero;
        Cursor.visible = false;
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
 
         camRotation.y = Mathf.Clamp(camRotation.y, -camRotationLimit, camRotationLimit);
 
-        PlayerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
+        playerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
         transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
 
         Vector3 temp = myRB.velocity;

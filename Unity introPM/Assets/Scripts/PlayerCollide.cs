@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerCollide : MonoBehaviour
 {
     [Header("Weapon Stats")]
+    public GameObject shot;
+    public float shotSpeed = 15f;
     public int weaponID = 0;
     public int fireMode = 0;
     public float fireRate = 0;
@@ -13,6 +15,7 @@ public class PlayerCollide : MonoBehaviour
     public float maxAmmo = 0;
     public float currentAmmo = 0;
     public float reloadAmt = 0;
+    public float bulletLifespan = 0;
     public bool canFire = true;
 
     
@@ -27,11 +30,14 @@ public class PlayerCollide : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0) && canFire && currentClip > 0)
+        if (Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponID >= 0)
         {
             canFire = false;
             currentClip--;
+            GameObject s = Instantiate(shot, weaponSlot.position, weaponSlot.rotation);
+            s.GetComponent<Rigidbody>().AddForce(playerControl.playerCam.transform.forward * shotSpeed);
             StartCoroutine("cooldownFire");
+            Destroy(s, bulletLifespan);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -42,7 +48,7 @@ public class PlayerCollide : MonoBehaviour
     {
         if(collider.gameObject.tag == "weapon")
         {
-            collider.gameObject.transform.position = weaponSlot.position;
+            collider.gameObject.transform.SetPositionAndRotation(weaponSlot.position, weaponSlot.rotation);
             
             collider.gameObject.transform.SetParent(weaponSlot);
 
@@ -50,6 +56,7 @@ public class PlayerCollide : MonoBehaviour
             {
                 case "weapon1":
                     weaponID = 0;
+                    shotSpeed = 10000;
                     fireMode = 0;
                     fireRate = 0.25f;
                     currentClip = 20;
@@ -57,6 +64,7 @@ public class PlayerCollide : MonoBehaviour
                     maxAmmo = 400;
                     currentAmmo = 200;
                     reloadAmt = 20;
+                    bulletLifespan = 1;
                     break;
 
                 default:
