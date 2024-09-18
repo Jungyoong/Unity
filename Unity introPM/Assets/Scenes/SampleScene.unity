@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 976c3e649373de74eb9f6150f270e136, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slider: {fileID: 0}
+  slider: {fileID: 196255883}
 --- !u!114 &196255883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1245,12 +1245,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a45f572446600e4981ce63d4826a490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dashBar: {fileID: 196255882}
   sprintMode: 0
   doubleJump: 0
   speed: 10
   sprintMultiplier: 2.5
   jumpHeight: 5
   groundDetectDistance: 1.5
+  maxDash: 1
+  currentDash: 0
+  dashSpeed: 30000
   sprintToggleOption: 0
   mouseSensitivity: 2
   Xsensitivity: 2

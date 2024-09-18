@@ -5,6 +5,7 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
+    public DashBar dashBar;
     private Rigidbody myRB;
     Camera PlayerCam;
 
@@ -21,6 +22,9 @@ public class PlayerController : MonoBehaviour
     public float sprintMultiplier = 2.5f;
     public float jumpHeight = 2.0f;
     public float groundDetectDistance = 1.5f;
+    public int maxDash = 1;
+    public int currentDash;
+    public int dashSpeed = 30000;
 
 
     [Header("User Settings")]
@@ -38,6 +42,9 @@ public class PlayerController : MonoBehaviour
        camRotation = Vector2.zero;
        Cursor.visible = false;
        Cursor.lockState = CursorLockMode.Locked;
+
+       currentDash = maxDash;
+       dashBar.SetMaxDash(maxDash);
     }
 
     // Update is called once per frame
@@ -84,8 +91,15 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-
+            if (currentDash > 0)
+            {
+                currentDash -= 1;
+                myRB.AddForce(transform.forward * dashSpeed, ForceMode.Force);
+                dashBar.SetDash(currentDash);
+            }
         }
+            
+                
 
 
         if (isGrounded)
