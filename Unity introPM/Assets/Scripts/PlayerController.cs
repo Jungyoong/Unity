@@ -7,9 +7,6 @@ public class PlayerController : MonoBehaviour
 {
     public DashBar dashBar;
     private Rigidbody myRB;
-    public Camera playerCam;
-
-    Vector2 camRotation;
 
 
     public bool sprintMode = false;
@@ -25,23 +22,12 @@ public class PlayerController : MonoBehaviour
     public int maxDash = 1;
     public int currentDash;
     public int dashSpeed = 30000;
-
-
-    [Header("User Settings")]
     public bool sprintToggleOption = false;
-    public float mouseSensitivity = 2.0f;
-    public float Xsensitivity = 2.0f;
-    public float Ysensitivity = 2.0f;
-    public float camRotationLimit = 90f;
+
     // Start is called before the first frame update
     void Start()
     {
        myRB = GetComponent<Rigidbody>();
-       playerCam = transform.GetChild(0).GetComponent<Camera>();
-
-       camRotation = Vector2.zero;
-       Cursor.visible = false;
-       Cursor.lockState = CursorLockMode.Locked;
 
        currentDash = maxDash;
        dashBar.SetMaxDash(maxDash);
@@ -51,13 +37,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         isGrounded = Physics.Raycast(transform.position, -transform.up, groundDetectDistance);
-        camRotation.x += Input.GetAxisRaw("Mouse X") * mouseSensitivity;
-        camRotation.y += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
-
-        camRotation.y = Mathf.Clamp(camRotation.y, -camRotationLimit, camRotationLimit);
-
-        playerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
-        transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
 
         Vector3 temp = myRB.velocity;
 
@@ -99,9 +78,6 @@ public class PlayerController : MonoBehaviour
             }
         }
             
-                
-
-
         if (isGrounded)
         {
             doubleJump = 0;

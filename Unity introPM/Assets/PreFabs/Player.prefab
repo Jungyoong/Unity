@@ -24,13 +24,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064087933260274889}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.25, y: -0.25, z: 1}
   m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3018142170979839230}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &4064621388811938206
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 7724620947357053894}
   - component: {fileID: 8547795426475815985}
   - component: {fileID: 2673853751998542046}
+  - component: {fileID: 7992291570548706934}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -161,6 +162,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3018142170979839230}
+  - {fileID: 5762196750659804380}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &875637655044173894
@@ -276,21 +278,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dashBar: {fileID: 0}
-  playerCam: {fileID: 0}
   sprintMode: 0
   doubleJump: 0
   speed: 10
   sprintMultiplier: 2.5
   jumpHeight: 5
   groundDetectDistance: 1.5
-  maxDash: 1
+  maxDash: 4
   currentDash: 0
-  dashSpeed: 30000
+  dashSpeed: 30
   sprintToggleOption: 0
-  mouseSensitivity: 2
-  Xsensitivity: 2
-  Ysensitivity: 2
-  camRotationLimit: 90
 --- !u!114 &8547795426475815985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,8 +316,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf59ef2d15dee747a9c7e3fcd8399f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shot: {fileID: 0}
-  shotSpeed: 15
+  shot: {fileID: 5513337503855442023, guid: 157619e288c74c34b8eda2e343c1ef80, type: 3}
+  shotSpeed: 0
   weaponID: 0
   fireMode: 0
   fireRate: 0
@@ -331,5 +328,54 @@ MonoBehaviour:
   reloadAmt: 0
   bulletLifespan: 0
   canFire: 1
-  weaponSlot: {fileID: 0}
-  playerControl: {fileID: 0}
+  weaponSlot: {fileID: 5226527175135469284}
+  playerControl: {fileID: 7724620947357053894}
+  cameraControl: {fileID: 7992291570548706934}
+--- !u!114 &7992291570548706934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4090266348866509309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad1033c35d83d4b49a26d7a759033f5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCam: {fileID: 3823184599673387717}
+  mouseSensitivity: 2
+  Xsensitivity: 2
+  Ysensitivity: 2
+  camRotationLimit: 90
+--- !u!1 &7614444076724125496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5762196750659804380}
+  m_Layer: 0
+  m_Name: cameraPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5762196750659804380
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7614444076724125496}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7429791435573781076}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

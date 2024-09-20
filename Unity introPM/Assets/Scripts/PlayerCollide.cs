@@ -21,6 +21,7 @@ public class PlayerCollide : MonoBehaviour
     
     public Transform weaponSlot;
     public PlayerController playerControl;
+    public CameraControl cameraControl;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +36,7 @@ public class PlayerCollide : MonoBehaviour
             canFire = false;
             currentClip--;
             GameObject s = Instantiate(shot, weaponSlot.position, weaponSlot.rotation);
-            s.GetComponent<Rigidbody>().AddForce(playerControl.playerCam.transform.forward * shotSpeed);
+            s.GetComponent<Rigidbody>().AddForce(cameraControl.playerCam.transform.forward * shotSpeed);
             StartCoroutine("cooldownFire");
             Destroy(s, bulletLifespan);
         }
