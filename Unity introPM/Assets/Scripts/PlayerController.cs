@@ -2,96 +2,100 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
-    public DashBar dashBar;
-    private Rigidbody myRB;
 
-
-    public bool sprintMode = false;
-    private bool isGrounded;
-
-
-    public int doubleJump = 0;
-    [Header("Movement Settings")]
-    public float speed = 10.0f;
-    public float sprintMultiplier = 2.5f;
-    public float jumpHeight = 2.0f;
-    public float groundDetectDistance = 1.5f;
-    public int maxDash = 1;
-    public int currentDash;
-    public int dashSpeed = 30000;
-    public bool sprintToggleOption = false;
+    [Header("Movement")]
+    public float moveSpeed;
+    public float groundDrag;
+    public float jumpHeight;
+    public float airMultiplier;
+    
+    [Header("Ground Check")]
+    public Transform orientation;
+    public LayerMask whatIsGround;
+    public float playerHeight;
+    bool onGround;
+    
+    float horizontalInput;
+    float verticalInput;
+    Vector3 moveDirection;
+    Rigidbody rb;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-       myRB = GetComponent<Rigidbody>();
-
-       currentDash = maxDash;
-       dashBar.SetMaxDash(maxDash);
+       rb = GetComponent<Rigidbody>();
     }
+
+    void FixedUpdate()
+    {
+        movePlayer();
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        isGrounded = Physics.Raycast(transform.position, -transform.up, groundDetectDistance);
+        onGround = Physics.Raycast(transform.position, -transform.up, playerHeight * 0.5f + 0.2f, whatIsGround);
 
-        Vector3 temp = myRB.velocity;
+        movementInput();
+        speedControl();
+        if (Input.GetKeyDown(KeyCode.Space))
+            jump();
 
-        if(!sprintToggleOption)
+        if (onGround)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
-                sprintMode = true;
-
-            if (Input.GetKeyUp(KeyCode.LeftShift))
-                sprintMode = false;
+            rb.drag = groundDrag;
         }
+        else
+            rb.drag = 0;
 
-        if(sprintToggleOption)
+        
+    }
+
+    private void movementInput()
+    {
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+    }
+
+    public void movePlayer()
+    {
+        moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+        
+        if (onGround)
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+
+        else if (!onGround)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetAxisRaw("Vertical") > 0)
-                sprintMode = true;
-
-            if (Input.GetAxisRaw("Vertical") <= 0)
-                sprintMode = false;
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
+    }
 
-
-
-        if (!sprintMode)
-            temp.x = Input.GetAxisRaw("Vertical") * speed;       
-
-        if (sprintMode)
-            temp.x = Input.GetAxisRaw("Vertical") * speed * sprintMultiplier;
-
-        temp.z = Input.GetAxisRaw("Horizontal") * speed;
-
-        if (Input.GetKeyDown(KeyCode.Q))
+    public void jump()
+    {
+        if (onGround)
         {
-            if (currentDash > 0)
-            {
-                currentDash -= 1;
-                myRB.AddForce(transform.forward * dashSpeed, ForceMode.Force);
-                dashBar.SetDash(currentDash);
-            }
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
         }
-            
-        if (isGrounded)
-        {
-            doubleJump = 0;
-        }    
-
-        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || doubleJump < 1)) 
-        {
-            temp.y = jumpHeight;
-            doubleJump += 1;
-        }
-
-        myRB.velocity = (temp.x * transform.forward) + (temp.z * transform.right) + (temp.y * transform.up);
-
+    
     }
 
 
+    public void speedControl()
+    {
+        Vector3 flatvel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        if (flatvel.magnitude > moveSpeed)
+        {
+            Vector3 limitedVel = flatvel.normalized * moveSpeed;
+            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+        }
+    }
 }

@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
     public Camera playerCam;
+    public Transform orientation;
+
     Vector2 camRotation;
 
         [Header("User Settings")]
@@ -17,10 +22,11 @@ public class CameraControl : MonoBehaviour
     void Start()
     {
         playerCam = transform.GetChild(0).GetComponent<Camera>();
+        orientation = transform.GetChild(1).GetComponent<Transform>();
 
-       camRotation = Vector2.zero;
-       Cursor.visible = false;
-       Cursor.lockState = CursorLockMode.Locked;
+        camRotation = Vector2.zero;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -33,5 +39,6 @@ public class CameraControl : MonoBehaviour
 
         playerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
         transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
+
     }
 }
