@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCollide : MonoBehaviour
@@ -7,6 +8,7 @@ public class PlayerCollide : MonoBehaviour
     [Header("Weapon Stats")]
     public GameObject shot;
     public float shotSpeed = 15f;
+    public float upwardShotSpeed = 1f;
     public int weaponID = 0;
     public int fireMode = 0;
     public float fireRate = 0;
@@ -18,10 +20,13 @@ public class PlayerCollide : MonoBehaviour
     public float bulletLifespan = 0;
     public bool canFire = true;
 
+    public string hitName;
+
     
     public Transform weaponSlot;
     public PlayerController playerControl;
-    public CameraControl cameraControl;
+    public Transform attackPoint;
+    public Transform cam;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,11 +39,31 @@ public class PlayerCollide : MonoBehaviour
         if (Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponID >= 0)
         {
             canFire = false;
+
+            GameObject projectile = Instantiate(shot, attackPoint.position, cam.rotation);
+
+            Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
+
+            Vector3 forceDirection = cam.transform.forward;
+
+            RaycastHit hit;
+
+            if (Physics.Raycast(cam.position, cam.forward, out hit, 500f))
+            {
+                forceDirection = (hit.point - attackPoint.position).normalized;
+                hitName = hit.collider.gameObject.name;
+                Debug.Log(hitName);
+            }
+
+            Vector3 forceToAdd = forceDirection * shotSpeed + forceDirection * upwardShotSpeed;
+
+            projectileRb.AddForce(forceToAdd, ForceMode.Impulse);
+
             currentClip--;
-            GameObject s = Instantiate(shot, weaponSlot.position, weaponSlot.rotation);
-            s.GetComponent<Rigidbody>().AddForce(cameraControl.playerCam.transform.forward * shotSpeed);
+
             StartCoroutine("cooldownFire");
-            Destroy(s, bulletLifespan);
+
+            Destroy(projectile, bulletLifespan);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -57,7 +82,8 @@ public class PlayerCollide : MonoBehaviour
             {
                 case "weapon1":
                     weaponID = 0;
-                    shotSpeed = 10000;
+                    shotSpeed = 1000f;
+                    upwardShotSpeed = 150f;
                     fireMode = 0;
                     fireRate = 0.25f;
                     currentClip = 20;

@@ -3,26 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
 
     [Header("Movement")]
-    public float moveSpeed;
+    private float moveSpeed;
+    public float walkSpeed;
+    public float sprintSpeed;
     public float groundDrag;
     public float jumpHeight;
     public float airMultiplier;
+
     
     [Header("Ground Check")]
     public Transform orientation;
     public LayerMask whatIsGround;
     public float playerHeight;
     bool onGround;
-    
-    float horizontalInput;
-    float verticalInput;
+
+    [Header("Keybinds")]
+    public KeyCode sprintKey = KeyCode.LeftShift;
+
     Vector3 moveDirection;
     Rigidbody rb;
+
+    public MovementState state; 
+    public enum MovementState
+    {
+        walking,
+        sprinting,
+        air
+    }
     
 
     // Start is called before the first frame update
@@ -33,7 +46,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        movePlayer();
     }
 
 
@@ -42,8 +54,10 @@ public class PlayerController : MonoBehaviour
     {
         onGround = Physics.Raycast(transform.position, -transform.up, playerHeight * 0.5f + 0.2f, whatIsGround);
 
-        movementInput();
         speedControl();
+        stateHandler();
+        movePlayer();
+
         if (Input.GetKeyDown(KeyCode.Space))
             jump();
 
@@ -57,16 +71,29 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    private void movementInput()
+    public void stateHandler()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        if (onGround && Input.GetKey(sprintKey))
+        {
+            state = MovementState.sprinting;
+            moveSpeed = sprintSpeed;
+        }
+        else if (onGround)
+        {
+            state = MovementState.walking;
+            moveSpeed = walkSpeed;
+        }
+        else
+        {
+            state = MovementState.air;
+        }
+
     }
 
     public void movePlayer()
     {
-        moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
-        
+        moveDirection = (orientation.forward * Input.GetAxisRaw("Vertical")) + (orientation.right * Input.GetAxisRaw("Horizontal"));
+
         if (onGround)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 

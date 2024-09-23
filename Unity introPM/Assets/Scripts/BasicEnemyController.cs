@@ -6,6 +6,7 @@ using UnityEngine;
 public class BasicEnemyController : MonoBehaviour
 {
 
+    public PlayerCollide Hit;
     public int health = 3;
     public int maxHealth = 3;
     // Start is called before the first frame update
@@ -21,13 +22,10 @@ public class BasicEnemyController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
 
-    private void OnTriggerEnter(Collider collider)
-    {
-        if (collider.gameObject.tag == "shot")
+        if (Hit.hitName == "Enemy")
         {
-            Destroy(collider.gameObject);
+            Hit.hitName = null;
             health--;
         }
     }

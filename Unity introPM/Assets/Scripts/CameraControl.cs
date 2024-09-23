@@ -1,44 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    public Camera playerCam;
+    public float Xsensitivity;
+    public float Ysensitivity;
+
     public Transform orientation;
 
-    Vector2 camRotation;
+    float xRotation;
+    float yRotation;
 
-        [Header("User Settings")]
-    public float mouseSensitivity = 2.0f;
-    public float Xsensitivity = 2.0f;
-    public float Ysensitivity = 2.0f;
-    public float camRotationLimit = 90f;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        playerCam = transform.GetChild(0).GetComponent<Camera>();
-        orientation = transform.GetChild(1).GetComponent<Transform>();
-
-        camRotation = Vector2.zero;
-        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        camRotation.x += Input.GetAxisRaw("Mouse X") * mouseSensitivity;
-        camRotation.y += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
+        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * Xsensitivity;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * Ysensitivity;
 
-        camRotation.y = Mathf.Clamp(camRotation.y, -camRotationLimit, camRotationLimit);
+        yRotation += mouseX;
 
-        playerCam.transform.localRotation = Quaternion.AngleAxis(camRotation.y, Vector3.left);
-        transform.localRotation = Quaternion.AngleAxis(camRotation.x, Vector3.up);
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
+        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
+
+
 }
