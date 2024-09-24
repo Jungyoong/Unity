@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public float groundDrag;
     public float jumpHeight;
     public float airMultiplier;
+    public float airSpeed;
 
     
     [Header("Ground Check")]
@@ -27,7 +28,7 @@ public class PlayerController : MonoBehaviour
     public KeyCode sprintKey = KeyCode.LeftShift;
 
     Vector3 moveDirection;
-    Rigidbody rb;
+    public Rigidbody rb;
 
     public MovementState state; 
     public enum MovementState
@@ -123,6 +124,16 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 limitedVel = flatvel.normalized * moveSpeed;
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+        }
+    }
+    public void airSpeedControl()
+    {
+        Vector3 yFlatvel = new Vector3(0f, rb.velocity.y, 0f);
+
+        if (yFlatvel.magnitude > airSpeed)
+        {
+            Vector3 yLimitedVel = yFlatvel.normalized * airSpeed;
+            rb.velocity = new Vector3(rb.velocity.x, yLimitedVel.y, rb.velocity.z);
         }
     }
 }

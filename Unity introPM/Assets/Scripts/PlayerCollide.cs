@@ -46,10 +46,12 @@ public class PlayerCollide : MonoBehaviour
 
             Vector3 forceDirection = cam.transform.forward;
 
+            playerControl.rb.AddForce(-forceDirection * 20, ForceMode.Impulse);
+
             RaycastHit hit;
 
             if (Physics.Raycast(cam.position, cam.forward, out hit, 500f))
-            {
+            {   
                 forceDirection = (hit.point - attackPoint.position).normalized;
                 hitName = hit.collider.gameObject.name;
                 Debug.Log(hitName);
