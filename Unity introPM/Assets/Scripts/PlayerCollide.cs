@@ -7,6 +7,7 @@ public class PlayerCollide : MonoBehaviour
 {
     [Header("Weapon Stats")]
     public GameObject shot;
+    public float bulletKnockback;
     public float shotSpeed = 15f;
     public float upwardShotSpeed = 1f;
     public int weaponID = 0;
@@ -40,13 +41,11 @@ public class PlayerCollide : MonoBehaviour
         {
             canFire = false;
 
-            GameObject projectile = Instantiate(shot, attackPoint.position, cam.rotation);
-
-            Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-
             Vector3 forceDirection = cam.transform.forward;
 
-            playerControl.rb.AddForce(-forceDirection * 20, ForceMode.Impulse);
+            //Bullet knockback
+            playerControl.rb.velocity = new Vector3(0, 0, 0);
+            playerControl.rb.AddForce(-forceDirection * bulletKnockback, ForceMode.VelocityChange);
 
             RaycastHit hit;
 
@@ -57,14 +56,13 @@ public class PlayerCollide : MonoBehaviour
                 Debug.Log(hitName);
             }
 
+            //Bullet spawn
             Vector3 forceToAdd = forceDirection * shotSpeed + forceDirection * upwardShotSpeed;
-
+            GameObject projectile = Instantiate(shot, attackPoint.position, cam.rotation);
+            Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
             projectileRb.AddForce(forceToAdd, ForceMode.Impulse);
-
             currentClip--;
-
             StartCoroutine("cooldownFire");
-
             Destroy(projectile, bulletLifespan);
         }
 
@@ -84,10 +82,11 @@ public class PlayerCollide : MonoBehaviour
             {
                 case "weapon1":
                     weaponID = 0;
+                    bulletKnockback = 25f;
                     shotSpeed = 1000f;
                     upwardShotSpeed = 150f;
                     fireMode = 0;
-                    fireRate = 0.25f;
+                    fireRate = 1f;
                     currentClip = 20;
                     clipSize = 20;
                     maxAmmo = 400;
