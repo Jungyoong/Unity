@@ -9,7 +9,6 @@ public class BasicEnemyController : MonoBehaviour
     public PlayerController player;
     public NavMeshAgent agent;
 
-    public PlayerCollide Hit;
     public int health = 3;
     public int maxHealth = 3;
     // Start is called before the first frame update
@@ -25,12 +24,6 @@ public class BasicEnemyController : MonoBehaviour
         if (health <= 0)
         {
             Destroy(gameObject);
-        }
-
-        if (Hit.hitName == "Enemy")
-        {
-            Hit.hitName = null;
-            health--;
         }
     }
 }

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 619f07632e4d14a4e80eac842b463f97, type: 3}
+  m_Name: Rifle
+  m_EditorClassIdentifier: 
+  weaponName: Rifle
+  weaponID: 2
+  fireMode: 0
+  damage: 15
+  range: 100
+  fireRate: 0.1
+  bulletKnockback: 7
+  currentClip: 30
+  maxClip: 30
+  currentAmmo: 210
+  maxAmmo: 300
+  shotSpeed: 0
+  upwardShotSpeed: 0
+  weaponPreFab: {fileID: 8282590390542250167, guid: ce4ac8b17f4a77e4ea3a6e0686c643a1, type: 3}

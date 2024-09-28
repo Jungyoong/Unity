@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     public KeyCode sprintKey = KeyCode.LeftShift;
 
     Vector3 moveDirection;
-    public Rigidbody rb;
+    Rigidbody rb;
 
     public MovementState state; 
     public enum MovementState

@@ -5,141 +5,48 @@ using UnityEngine;
 
 public class PlayerCollide : MonoBehaviour
 {
-    [Header("Weapon Stats")]
-    public GameObject shot;
-    public float bulletKnockback;
-    public float shotSpeed = 15f;
-    public float upwardShotSpeed = 1f;
-    public int weaponID = 0;
-    public int fireMode = 0;
-    public float fireRate = 0;
-    public float currentClip = 0;
-    public float clipSize = 0;
-    public float maxAmmo = 0;
-    public float currentAmmo = 0;
-    public float reloadAmt = 0;
-    public float bulletLifespan = 0;
-    public bool canFire = true;
+    WeaponSystem weaponScript;
+    public int reloadAmt = 30;
+    public bool equip;
+    public int equipID;
+    public float damage;
 
-    public string hitName;
 
-    
-    public Transform weaponSlot;
-    public PlayerController playerControl;
-    public Transform attackPoint;
-    public Transform cam;
     // Start is called before the first frame update
     void Start()
     {
-        
+        equip = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0) && canFire && currentClip > 0 && weaponID >= 0)
-        {
-            canFire = false;
 
-            Vector3 forceDirection = cam.transform.forward;
-
-            //Bullet knockback
-            playerControl.rb.velocity = new Vector3(0, 0, 0);
-            playerControl.rb.AddForce(-forceDirection * bulletKnockback, ForceMode.VelocityChange);
-
-            RaycastHit hit;
-
-            if (Physics.Raycast(cam.position, cam.forward, out hit, 500f))
-            {   
-                forceDirection = (hit.point - attackPoint.position).normalized;
-                hitName = hit.collider.gameObject.name;
-                Debug.Log(hitName);
-            }
-
-            //Bullet spawn
-            Vector3 forceToAdd = forceDirection * shotSpeed + forceDirection * upwardShotSpeed;
-            GameObject projectile = Instantiate(shot, attackPoint.position, cam.rotation);
-            Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-            projectileRb.AddForce(forceToAdd, ForceMode.Impulse);
-            currentClip--;
-            StartCoroutine("cooldownFire");
-            Destroy(projectile, bulletLifespan);
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-            reloadClip();
     }
 
     private void OnTriggerEnter(Collider collider)
     {
-        if(collider.gameObject.tag == "weapon")
+        if (collider.gameObject.tag == "weapon" && !equip)
         {
-            collider.gameObject.transform.SetPositionAndRotation(weaponSlot.position, weaponSlot.rotation);
-            
-            collider.gameObject.transform.SetParent(weaponSlot);
-
-            switch(collider.gameObject.name)
-            {
-                case "weapon1":
-                    weaponID = 0;
-                    bulletKnockback = 25f;
-                    shotSpeed = 1000f;
-                    upwardShotSpeed = 150f;
-                    fireMode = 0;
-                    fireRate = 1f;
-                    currentClip = 20;
-                    clipSize = 20;
-                    maxAmmo = 400;
-                    currentAmmo = 200;
-                    reloadAmt = 20;
-                    bulletLifespan = 1;
-                    break;
-
-                default:
-                    break;
-            }
+            weaponScript = collider.gameObject.GetComponent<WeaponSystem>();
+            UpdateValues();
         }
-            
-        if((currentAmmo < maxAmmo) && collider.gameObject.tag == "ammoPickup")
-        {
-            currentAmmo += reloadAmt;
 
-            if (currentAmmo > maxAmmo)
-                currentAmmo = maxAmmo;
+        if(equip && (weaponScript.currentAmmo < weaponScript.maxAmmo) && collider.gameObject.tag == "ammoPickup")
+        {
+            weaponScript.currentAmmo += reloadAmt;
+
+            if (weaponScript.currentAmmo > weaponScript.maxAmmo)
+                weaponScript.currentAmmo = weaponScript.maxAmmo;
             
             Destroy(collider.gameObject);
         }
-    
-    }
-    
-    public void reloadClip()
-    {
-        if (currentClip >= clipSize)
-            return;
-
-        else
-        {
-            float reloadCount = clipSize - currentClip;
-
-            if (currentAmmo < reloadCount)
-            {
-                currentClip += currentAmmo;
-                currentAmmo = 0;
-                return;
-            }
-
-            else
-            {
-                currentClip += reloadCount;
-                currentAmmo -= reloadCount;
-                return;
-            }
-        }
     }
 
-    IEnumerator cooldownFire()
+    void UpdateValues()
     {
-        yield return new WaitForSeconds(fireRate);
-        canFire = true;
+        equipID = weaponScript.weaponID;
+        equip = true;
+        damage = weaponScript.damage;
     }
 }
