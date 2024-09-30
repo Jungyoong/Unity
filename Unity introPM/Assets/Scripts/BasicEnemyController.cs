@@ -6,7 +6,6 @@ using UnityEngine.AI;
 
 public class BasicEnemyController : MonoBehaviour
 {
-    public PlayerController player;
     public NavMeshAgent agent;
 
     public int health = 3;
@@ -14,7 +13,6 @@ public class BasicEnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player").GetComponent<PlayerController>();
         agent = GetComponent<NavMeshAgent>();
     }
 

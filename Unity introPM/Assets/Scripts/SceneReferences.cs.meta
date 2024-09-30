@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 390129644bfd260439268ab2d2f699f2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - rb: {fileID: 8747721109072036858, guid: 8ed65cbc2ee40774288adf72613acc34, type: 3}
+  - playerCollide: {fileID: 4998539908222199278, guid: 8ed65cbc2ee40774288adf72613acc34, type: 3}
+  - cam: {fileID: 3747608341851932654, guid: a799fb92f694f864ea5c06aca35d72c2, type: 3}
+  - weaponSlot: {fileID: 8619876655375523757, guid: ba9402473b417de4c9ac02c0e5d0cc39, type: 3}
+  - attackPoint: {fileID: 8529828116652162806, guid: 5f455186e360a044180e9a55c91c44d1, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

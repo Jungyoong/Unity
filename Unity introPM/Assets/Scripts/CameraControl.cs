@@ -7,7 +7,8 @@ public class CameraControl : MonoBehaviour
     public float Xsensitivity;
     public float Ysensitivity;
 
-    public Transform orientation;
+    private InstantiateManager instantiateManager;
+    internal Transform orientation;
 
     float xRotation;
     float yRotation;
@@ -15,6 +16,8 @@ public class CameraControl : MonoBehaviour
 
     private void Start()
     {
+        instantiateManager = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>();
+        orientation = instantiateManager.orientation;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

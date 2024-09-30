@@ -6,13 +6,14 @@ using UnityEngine;
 public class WeaponSystem : MonoBehaviour
 {
     public WeaponData currentWeapon;
-    public Rigidbody rb;
-    public PlayerCollide playerCollide;
 
+    InstantiateManager instantiateManager;
 
-    public Transform weaponSlot;
-    public Transform attackPoint;
-    public Transform cam;
+    internal PlayerCollide playerCollide;
+    internal Rigidbody rb;
+    internal Transform attackPoint;
+    internal Transform weaponSlot;
+    internal Transform cam;
 
     public string hitName;
     public bool equip = false;
@@ -30,6 +31,8 @@ public class WeaponSystem : MonoBehaviour
     public float bulletKnockback;
 
 
+
+    
     void Start()
     {
         weaponID = currentWeapon.weaponID;
@@ -43,10 +46,20 @@ public class WeaponSystem : MonoBehaviour
         range = currentWeapon.range;
         damage = currentWeapon.damage;
         bulletKnockback = currentWeapon.bulletKnockback;
+
+        instantiateManager = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>();
+
+        playerCollide = instantiateManager.playerCollide;
+        rb = instantiateManager.rb;
+        attackPoint = instantiateManager.attackPoint;
+        weaponSlot = instantiateManager.weaponSlot;
+        cam = instantiateManager.cam;
+        Debug.Log(playerCollide);
     }
 
     void Update()
     {
+        Debug.Log(playerCollide);
         equip = playerCollide.equip;
 
         if (Input.GetMouseButton(0) && canFire && equip && currentClip > 0)
@@ -61,18 +74,18 @@ public class WeaponSystem : MonoBehaviour
     void Shoot()
     {
         canFire = false;
-        Vector3 forceDirection = cam.transform.forward;
+        Vector3 forceDirection = instantiateManager.cam.transform.forward;
 
         //Bullet knockback
-        rb.velocity = new Vector3(0, 0, 0);
-        rb.AddForce(-forceDirection * bulletKnockback, ForceMode.VelocityChange);
+        instantiateManager.rb.velocity = new Vector3(0, 0, 0);
+        instantiateManager.rb.AddForce(-forceDirection * bulletKnockback, ForceMode.VelocityChange);
 
         //checks if the player's crosshair has hit an object
         RaycastHit hit;
 
-        if (Physics.Raycast(cam.position, cam.forward, out hit, 500f))
+        if (Physics.Raycast(instantiateManager.cam.position, instantiateManager.cam.forward, out hit, 500f))
         {   
-            forceDirection = (hit.point - attackPoint.position).normalized;
+            forceDirection = (hit.point - instantiateManager.attackPoint.position).normalized;
             hitName = hit.collider.gameObject.name;
             Debug.Log(hitName);
             if (hit.collider.gameObject.tag == "basicEnemy")
@@ -122,8 +135,8 @@ public class WeaponSystem : MonoBehaviour
         {
             
             //sets the weapon to the player's arm
-            gameObject.transform.SetPositionAndRotation(weaponSlot.position, weaponSlot.rotation);
-            gameObject.transform.SetParent(weaponSlot);
+            gameObject.transform.SetPositionAndRotation(instantiateManager.weaponSlot.position, instantiateManager.weaponSlot.rotation);
+            gameObject.transform.SetParent(instantiateManager.weaponSlot);
             canFire = true;
         }
     }

@@ -19,7 +19,8 @@ public class PlayerController : MonoBehaviour
 
     
     [Header("Ground Check")]
-    public Transform orientation;
+    internal Transform orientation;
+    private InstantiateManager instantiateManager;
     public LayerMask whatIsGround;
     public float playerHeight;
     bool onGround;
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour
     public KeyCode sprintKey = KeyCode.LeftShift;
 
     Vector3 moveDirection;
-    Rigidbody rb;
+    internal Rigidbody rb;
 
     public MovementState state; 
     public enum MovementState
@@ -42,7 +43,9 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       rb = GetComponent<Rigidbody>();
+        instantiateManager = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>();
+        orientation = instantiateManager.orientation;
+        rb = instantiateManager.rb;
     }
 
     void FixedUpdate()

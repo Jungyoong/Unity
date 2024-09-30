@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour
 {
-    public Transform cameraPosition;
+    private InstantiateManager instantiateManager;
+    internal Transform cameraPosition;
     
     // Update is called once per frame
+    void Start()
+    {
+        instantiateManager = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>();
+        cameraPosition = instantiateManager.camPos;
+    }
     void Update()
     {
-        transform.position = cameraPosition.position;
+        instantiateManager.camInstance.transform.position = cameraPosition.position;
     }
 }

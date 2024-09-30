@@ -121,11 +121,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeapon: {fileID: 11400000, guid: 31559d1d32a31374b9be7b7cf85b0ca8, type: 2}
+  instantiateManager: {fileID: 1534320283141776483, guid: 6e6e4faca02a2cc4a8cdaad276e663aa, type: 3}
   hitName: 
-  rb: {fileID: 0}
-  weaponSlot: {fileID: 0}
-  attackPoint: {fileID: 0}
-  cam: {fileID: 0}
   equip: 0
   canFire: 0
   weaponID: 0
@@ -134,7 +131,6 @@ MonoBehaviour:
   maxClip: 0
   currentAmmo: 0
   maxAmmo: 0
-  reloadAmt: 0
   fireMode: 0
   damage: 0
   range: 0

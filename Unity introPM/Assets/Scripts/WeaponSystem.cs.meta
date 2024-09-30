@@ -3,7 +3,14 @@ guid: 792568524d509f4488524f07d391f0ca
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - currentWeapon: {instanceID: 0}
+  - rb: {instanceID: 0}
+  - playerCollide: {instanceID: 0}
+  - instantiateManager: {fileID: 229045311629887318, guid: 6e6e4faca02a2cc4a8cdaad276e663aa, type: 3}
+  - weaponSlot: {instanceID: 0}
+  - attackPoint: {instanceID: 0}
+  - cam: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
