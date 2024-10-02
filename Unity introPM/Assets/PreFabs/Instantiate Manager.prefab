@@ -45,4 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rbPreFab: {fileID: 6600473597868822738, guid: 8ed65cbc2ee40774288adf72613acc34, type: 3}
-  camPreFab: {fileID: 8761563700281084291, guid: a799fb92f694f864ea5c06aca35d72c2, type: 3}
+  camPreFab: {fileID: 1596485365878281905, guid: a799fb92f694f864ea5c06aca35d72c2, type: 3}

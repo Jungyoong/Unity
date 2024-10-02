@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5744231608901440649}
   - component: {fileID: 304693551499513157}
   - component: {fileID: 4998539908222199278}
+  - component: {fileID: 7996690850666861924}
   m_Layer: 2
   m_Name: Player
   m_TagString: Player
@@ -154,11 +155,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 7
   sprintSpeed: 10
-  groundDrag: 6
+  groundDrag: 8
   jumpHeight: 9
   airMultiplier: 0.4
   airSpeed: 30
-  instantiateManager: {fileID: 1534320283141776483, guid: 6e6e4faca02a2cc4a8cdaad276e663aa, type: 3}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -180,7 +180,7 @@ MonoBehaviour:
   healthRestore: 20
   maxHealth: 100
   currentHealth: 0
-  healthBar: {fileID: 1718199374192021220, guid: 03a3fcfaaa40cdd48a9ec284de499ec1, type: 3}
+  healthBar: {fileID: 8715635588852131659, guid: 03a3fcfaaa40cdd48a9ec284de499ec1, type: 3}
 --- !u!114 &4998539908222199278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,6 +194,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reloadAmt: 30
+  equip: 0
+--- !u!114 &7996690850666861924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600473597868822738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2776fc54ea092984c8efbe12a92fdef6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   equip: 0
   equipID: 0
   damage: 0

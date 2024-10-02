@@ -10,23 +10,25 @@ public class InstantiateManager : MonoBehaviour
 
 
     internal Rigidbody rb;
-    internal PlayerCollide playerCollide;
+    internal PlayerEquip playerEquip;
     internal GameObject camInstance;
     internal Transform weaponSlot;
     internal Transform attackPoint;
     internal Transform cam;
     internal Transform camPos;
     internal Transform orientation;
+    internal PlayerHP playerHP;
 
     // Start is called before the first frame update
     void Start()
     {
         //handles the instantiate values for the player PreFab
         GameObject rbInstance = Instantiate(rbPreFab);
-        playerCollide = rbInstance.AddComponent<PlayerCollide>();
+        playerEquip = rbInstance.AddComponent<PlayerEquip>();
         orientation = rbInstance.transform.GetChild(0);
         camPos = rbInstance.transform.GetChild(1);
         rb = rbInstance.GetComponent<Rigidbody>();
+        playerHP = rbInstance.GetComponent<PlayerHP>();
 
         //handles the instantiate values for the camera PreFab
         camInstance = Instantiate(camPreFab);

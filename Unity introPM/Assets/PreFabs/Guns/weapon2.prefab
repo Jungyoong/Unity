@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 8282590390542250167}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -42.21, y: 0.98, z: -46.36}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -121,7 +121,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeapon: {fileID: 11400000, guid: 8d0aa335e053b184e9264443d3e3798a, type: 2}
-  instantiateManager: {fileID: 1534320283141776483, guid: 6e6e4faca02a2cc4a8cdaad276e663aa, type: 3}
   hitName: 
   equip: 0
   canFire: 0
@@ -136,3 +135,4 @@ MonoBehaviour:
   range: 0
   fireRate: 0
   bulletKnockback: 0
+  setUp: 0

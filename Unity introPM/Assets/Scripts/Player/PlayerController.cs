@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     
     [Header("Ground Check")]
     internal Transform orientation;
-    private InstantiateManager instantiateManager;
+    InstantiateManager instantiateManager;
     public LayerMask whatIsGround;
     public float playerHeight;
     bool onGround;
