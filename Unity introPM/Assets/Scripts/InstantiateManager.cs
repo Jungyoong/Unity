@@ -12,6 +12,8 @@ public class InstantiateManager : MonoBehaviour
     internal Rigidbody rb;
     internal PlayerEquip playerEquip;
     internal GameObject camInstance;
+    internal Camera mainCam;
+    internal CameraControl cameraControl;
     internal Transform weaponSlot;
     internal Transform attackPoint;
     internal Transform cam;
@@ -32,6 +34,8 @@ public class InstantiateManager : MonoBehaviour
 
         //handles the instantiate values for the camera PreFab
         camInstance = Instantiate(camPreFab);
+        mainCam = camInstance.GetComponent<Camera>();
+        cameraControl = camInstance.GetComponent<CameraControl>();
         cam = camInstance.GetComponent<Transform>();
         weaponSlot = camInstance.transform.GetChild(0);
         attackPoint = camInstance.transform.GetChild(1);

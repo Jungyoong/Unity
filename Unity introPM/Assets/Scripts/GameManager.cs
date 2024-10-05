@@ -21,8 +21,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         //calls the values from the instantiated Player
-        instantiateManager = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>();
-        pauseMenu.SetActive(false);
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            instantiateManager = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>();
+            pauseMenu.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -89,6 +92,15 @@ public class GameManager : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene(0);
+        Resume();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void Loadlevel(int sceneID)
