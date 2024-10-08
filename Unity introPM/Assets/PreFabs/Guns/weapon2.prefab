@@ -121,6 +121,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeapon: {fileID: 11400000, guid: 8d0aa335e053b184e9264443d3e3798a, type: 2}
+  player:
+    serializedVersion: 2
+    m_Bits: 8
   hitName: 
   equip: 0
   canFire: 0

@@ -8,6 +8,7 @@ public class HealthBar : MonoBehaviour
 {
     InstantiateManager instantiateManager;
     public Slider slider;
+    GameObject player;
 
     void Start()
     {

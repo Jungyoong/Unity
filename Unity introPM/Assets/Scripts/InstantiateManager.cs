@@ -9,6 +9,7 @@ public class InstantiateManager : MonoBehaviour
     public GameObject camPreFab;
 
 
+    internal Transform rbInstanceTransform;
     internal Rigidbody rb;
     internal PlayerEquip playerEquip;
     internal GameObject camInstance;
@@ -22,10 +23,11 @@ public class InstantiateManager : MonoBehaviour
     internal PlayerHP playerHP;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         //handles the instantiate values for the player PreFab
         GameObject rbInstance = Instantiate(rbPreFab);
+        rbInstanceTransform = rbInstance.transform;
         playerEquip = rbInstance.AddComponent<PlayerEquip>();
         orientation = rbInstance.transform.GetChild(0);
         camPos = rbInstance.transform.GetChild(1);

@@ -21,11 +21,13 @@ public class InventoryPage : MonoBehaviour
 
     List<InventoryItemUI> listOfUIItems = new List<InventoryItemUI>();
 
-    public Sprite image, image2;
-    public int quantity;
-    public string title, description;
-
     int currentlyDraggedItemIndex = -1;
+
+    public event Action<int> OnDescriptionRequested,
+        //OnItemActionRequested,
+        OnStartDragging;
+
+    public event Action<int, int> OnSwapItems;
 
     internal CameraControl cameraControl;
 
@@ -53,6 +55,14 @@ public class InventoryPage : MonoBehaviour
         }
     }
 
+    public void UpdateData(int itemIndex, Sprite itemImage, int itemQuantity)
+    {
+        if (listOfUIItems.Count > itemIndex)
+        {
+            listOfUIItems[itemIndex].SetData(itemImage, itemQuantity);
+        }
+    }
+
     private void HandleShowItemActions(InventoryItemUI inventoryItemUI)
     {
         
@@ -60,7 +70,7 @@ public class InventoryPage : MonoBehaviour
 
     private void HandleEndDrag(InventoryItemUI inventoryItemUI)
     {
-        mouseFollower.Toggle(false);
+        ResetDraggedItem();
     }
 
     private void HandleSwap(InventoryItemUI inventoryItemUI)
@@ -68,14 +78,9 @@ public class InventoryPage : MonoBehaviour
         int index = listOfUIItems.IndexOf(inventoryItemUI);
         if (index == -1)
         {
-            mouseFollower.Toggle(false);
-            currentlyDraggedItemIndex = -1;
             return;
         }
-        listOfUIItems[currentlyDraggedItemIndex].SetData(index == 0 ? image : image2, quantity);
-        listOfUIItems[index].SetData(currentlyDraggedItemIndex == 0 ? image : image2, quantity);
-        mouseFollower.Toggle(false);
-        currentlyDraggedItemIndex = -1;
+        OnSwapItems?.Invoke(currentlyDraggedItemIndex, index);
     }
 
     private void HandleBeginDrag(InventoryItemUI inventoryItemUI)
@@ -84,23 +89,29 @@ public class InventoryPage : MonoBehaviour
         if (index == -1)
             return;
         currentlyDraggedItemIndex = index;
+        HandleItemSelection(inventoryItemUI);
+        OnStartDragging?.Invoke(index);
+    }
+
+    public void CreateDraggedItem(Sprite sprite, int quantity)
+    {
         mouseFollower.Toggle(true);
-        mouseFollower.SetData(index == 0 ? image : image2, quantity);
+        mouseFollower.SetData(sprite, quantity);
     }
 
     private void HandleItemSelection(InventoryItemUI inventoryItemUI)
     {
-        itemDescripton.SetDescription(image, title, description);
-
-        listOfUIItems[0].Select();
+        int index = listOfUIItems.IndexOf(inventoryItemUI);
+        if (index == -1)
+        {
+            return;
+        }
+        OnDescriptionRequested?.Invoke(index);
     }
     public void Show()
     {
         gameObject.SetActive(true);
-        itemDescripton.ResetDescription();
-
-        listOfUIItems[0].SetData(image, quantity);
-        listOfUIItems[1].SetData(image2, quantity);
+        ResetSelection();
 
         tempYsensitivity = cameraControl.Ysensitivity;
         tempXsensitivity = cameraControl.Xsensitivity;
@@ -111,14 +122,34 @@ public class InventoryPage : MonoBehaviour
         Cursor.visible = true;
     }
 
+    private void ResetSelection()
+    {
+        itemDescripton.ResetDescription();
+        DeselectAllItems();
+    }
+
+    private void DeselectAllItems()
+    {
+        foreach (InventoryItemUI item in listOfUIItems)
+        {
+            item.Deselect();
+        }
+    }
+
     public void Hide()
     {
         gameObject.SetActive(false);
-        listOfUIItems[0].Deselect();
+        ResetDraggedItem();
 
         cameraControl.Ysensitivity = tempYsensitivity;
         cameraControl.Xsensitivity = tempXsensitivity;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    public void ResetDraggedItem()
+    {
+        mouseFollower.Toggle(false);
+        currentlyDraggedItemIndex = -1;
     }
 }

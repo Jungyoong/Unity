@@ -9,6 +9,8 @@ public class WeaponSystem : MonoBehaviour
 
     InstantiateManager instantiateManager;
 
+    public LayerMask ignoreRaycast;
+
     internal Rigidbody rb;
     internal Transform attackPoint;
     internal Transform weaponSlot;
@@ -33,11 +35,13 @@ public class WeaponSystem : MonoBehaviour
 
 
 
-    
-    void Start()
+    void Awake()
     {
         instantiateManager = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>();
-
+        ignoreRaycast = LayerMask.GetMask("Player", "Ignore Raycast");
+    }
+    void Start()
+    {
         weaponID = currentWeapon.weaponID;
         weaponName = currentWeapon.weaponName;
         currentClip = currentWeapon.currentClip;
@@ -84,15 +88,16 @@ public class WeaponSystem : MonoBehaviour
         //checks if the player's crosshair has hit an object
         RaycastHit hit;
 
-        if (Physics.Raycast(cam.position, cam.forward, out hit, 500f))
+        if (Physics.Raycast(cam.position, cam.forward, out hit, 500f, ~ignoreRaycast))
         {   
             forceDirection = (hit.point - attackPoint.position).normalized;
             hitName = hit.collider.gameObject.name;
             Debug.Log(hitName);
-            if (hit.collider.gameObject.tag == "basicEnemy")
+            if (hit.collider.gameObject.tag == "Enemy")
             {
-                BasicEnemyController enemyHP = hit.transform.GetComponent<BasicEnemyController>();
-                enemyHP.health -= damage;
+                EnemyAI enemyHP = hit.transform.GetComponent<EnemyAI>();
+                enemyHP.TakeDamage(damage);
+                Debug.Log(damage);
             }
         }
         currentClip--;

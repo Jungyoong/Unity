@@ -8,12 +8,13 @@ TagManager:
   - weapon
   - ammoPickup
   - shot
-  - basicEnemy
+  - Enemy
+  - EnemyShot
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - whatIsGround

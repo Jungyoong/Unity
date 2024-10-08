@@ -8,7 +8,14 @@ public class PlayerHP : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
 
-    public HealthBar healthBar;
+    GameObject healthBarObject;
+    HealthBar healthBar;
+
+    void Awake()
+    {
+        healthBarObject = GameObject.Find("Health Bar");
+        healthBar = healthBarObject.GetComponent<HealthBar>();  //Improve this part later
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -20,10 +27,6 @@ public class PlayerHP : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TakeDamage(20);
-        }
         if (currentHealth < 0)
         {
             currentHealth = 0;
@@ -40,6 +43,13 @@ public class PlayerHP : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
+        if (collider.gameObject.tag == "EnemyShot")
+        {
+            currentHealth -= collider.GetComponent<EnemyShotDamage>().damage;
+            healthBar.SetHealth(currentHealth);
+
+            Destroy(collider.gameObject);
+        }
         if((currentHealth < maxHealth) && collider.gameObject.tag == "healthPickup")
         {
             currentHealth += healthRestore;
