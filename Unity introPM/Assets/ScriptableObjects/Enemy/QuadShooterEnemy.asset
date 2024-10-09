@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d63a09a5402998e43a369a39832011cc, type: 3}
-  m_Name: BasicEnemy
+  m_Name: QuadShooterEnemy
   m_EditorClassIdentifier: 
-  attackSpeed: 1
-  sightRange: 32
-  attackRange: 10
-  health: 150
-  damage: 30
+  attackSpeed: 2
+  sightRange: 400
+  attackRange: 400
+  health: 180
+  damage: 20
+  enemyType: 4

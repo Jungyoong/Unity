@@ -10,4 +10,16 @@ public class EnemySO : ScriptableObject
     public float attackRange;
     public int health;
     public int damage;
+    public EnemyType enemyType;
+    public enum EnemyType
+    {
+        chasing,
+        shooting,
+        laser,
+        sniper,
+        quadSided,
+        spray,
+        laserSpray,
+        track
+    }
 }

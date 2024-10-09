@@ -16,6 +16,8 @@ public class WeaponSystem : MonoBehaviour
     internal Transform weaponSlot;
     internal Transform cam;
 
+    
+
     public string hitName;
     public bool equip = false;
     public bool canFire;
@@ -95,9 +97,16 @@ public class WeaponSystem : MonoBehaviour
             Debug.Log(hitName);
             if (hit.collider.gameObject.tag == "Enemy")
             {
-                EnemyAI enemyHP = hit.transform.GetComponent<EnemyAI>();
-                enemyHP.TakeDamage(damage);
-                Debug.Log(damage);
+                if (hit.transform.GetComponent<EnemyAI>() != null)
+                {
+                    EnemyAI enemyHP = hit.transform.GetComponent<EnemyAI>();
+                    enemyHP.TakeDamage(damage);
+                }
+                if (hit.transform.GetComponent<EnemyAIStill>() != null)
+                {
+                    EnemyAIStill enemyHP = hit.transform.GetComponent<EnemyAIStill>();
+                    enemyHP.TakeDamage(damage);
+                }
             }
         }
         currentClip--;

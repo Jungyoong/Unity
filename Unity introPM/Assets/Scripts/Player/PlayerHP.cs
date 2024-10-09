@@ -7,6 +7,8 @@ public class PlayerHP : MonoBehaviour
     public int healthRestore = 20;
     public int maxHealth = 100;
     public int currentHealth;
+    public bool invincibility = false;
+    public float invincibilityTime = 2f;
 
     GameObject healthBarObject;
     HealthBar healthBar;
@@ -41,14 +43,27 @@ public class PlayerHP : MonoBehaviour
         healthBar.SetHealth(currentHealth);
     }
 
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Enemy" && invincibility == false && collision.gameObject.GetComponent<EnemyAI>() != null && collision.gameObject.GetComponent<EnemyAI>().enemyType == EnemySO.EnemyType.chasing)
+        {
+            invincibility = true;
+            Invoke("InvincibilityUpTime", invincibilityTime);
+
+            currentHealth -= collision.gameObject.GetComponent<EnemyAI>().damage;
+        }
+    }
+
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "EnemyShot")
+        if (collider.gameObject.tag == "EnemyShot" && invincibility == false)
         {
+            invincibility = true;
+            Invoke("InvincibilityUpTime", invincibilityTime);
+
             currentHealth -= collider.GetComponent<EnemyShotDamage>().damage;
             healthBar.SetHealth(currentHealth);
-
-            Destroy(collider.gameObject);
         }
         if((currentHealth < maxHealth) && collider.gameObject.tag == "healthPickup")
         {
@@ -61,5 +76,10 @@ public class PlayerHP : MonoBehaviour
             
             Destroy(collider.gameObject);
         }
+    }
+
+    private void InvincibilityUpTime()
+    {
+        invincibility = false;
     }
 }

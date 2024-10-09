@@ -4,50 +4,42 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.AI;
+using static EnemySO;
 
 public class EnemyAI : MonoBehaviour
 {
     public NavMeshAgent agent;
-
-    InstantiateManager instantiateManager;
-
     internal Transform player;
-
     public LayerMask whatIsGround, whatIsPlayer;
-
     public GameObject projectile;
-
     public EnemySO enemyStats;
-
-    public int health;
-    public int damage;
+    public EnemyType enemyType;
     public Vector3 walkPoint;
+
     bool walkPointSet;
     public float walkPointRange;
 
+    public int health;
+    public int damage;
     public float timeBetweenAttacks;
     bool alreadyAttacked;
-
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
-
+    
     private void Start()
     {
         player = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>().rbInstanceTransform.transform;
         agent = GetComponent<NavMeshAgent>();
+        enemyType = enemyStats.enemyType;
 
-        sightRange = enemyStats.sightRange;
-        attackRange = enemyStats.attackRange;
-        timeBetweenAttacks = enemyStats.attackSpeed;
-        health = enemyStats.health;
-        damage = enemyStats.damage;
+        Setup();
     }
 
     private void Update()
     {
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-
+    
         if (!playerInSightRange && !playerInAttackRange) Patroling();
         if (playerInSightRange && !playerInAttackRange) ChasePlayer();
         if (playerInSightRange && playerInAttackRange) AttackPlayer();
@@ -85,11 +77,12 @@ public class EnemyAI : MonoBehaviour
 
     private void AttackPlayer()
     {
-        agent.SetDestination(transform.position);
 
+        agent.SetDestination(transform.position);
         transform.LookAt(player);
 
-        if (!alreadyAttacked)
+
+        if (!alreadyAttacked && enemyType != EnemyType.chasing)
         {
             GameObject projectileObject = Instantiate(projectile, transform.position, Quaternion.identity);
             Rigidbody rb = projectileObject.GetComponent<Rigidbody>();
@@ -125,6 +118,15 @@ public class EnemyAI : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position , attackRange);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, sightRange);
+    }
+
+    private void Setup()
+    {
+        sightRange = enemyStats.sightRange;
+        attackRange = enemyStats.attackRange;
+        timeBetweenAttacks = enemyStats.attackSpeed;
+        health = enemyStats.health;
+        damage = enemyStats.damage;
     }
 }
 
