@@ -7,7 +7,6 @@ public class WeaponData : ScriptableObject
 {
     public string weaponName;
     public int weaponID;
-    public int fireMode;
     public int damage;
     public float range;
     public float fireRate;
@@ -17,7 +16,19 @@ public class WeaponData : ScriptableObject
     public int currentAmmo;
     public int maxAmmo;
     public float shotSpeed;
-    public float upwardShotSpeed;
-    public GameObject weaponPreFab;
-
+    public float chargeSeconds;
+    public FireMode fireMode;
+    public enum FireMode
+    {
+        auto,
+        semiAuto,
+        charge
+    }
+    public ShotType shotType;
+    public enum ShotType
+    {
+        projectile,
+        hitscan
+    }
+    public GameObject projectilePreFab;
 }

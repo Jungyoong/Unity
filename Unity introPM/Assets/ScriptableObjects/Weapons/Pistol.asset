@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Pistol
   weaponID: 1
-  fireMode: 0
   damage: 30
   range: 100
   fireRate: 0.25
@@ -23,5 +22,8 @@ MonoBehaviour:
   maxClip: 12
   currentAmmo: 200
   maxAmmo: 200
-  reloadAmt: 12
-  weaponPreFab: {fileID: 7422491478786977838, guid: 02a3480b48a71b642ab1116d5bb357c9, type: 3}
+  shotSpeed: 100
+  chargeSeconds: 0
+  fireMode: 1
+  shotType: 1
+  projectilePreFab: {fileID: 0}

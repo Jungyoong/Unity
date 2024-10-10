@@ -115,4 +115,11 @@ public class EnemyAIStill : MonoBehaviour
         health = enemyStats.health;
         damage = enemyStats.damage;
     }
+
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "shot")
+            TakeDamage(collider.gameObject.GetComponent<PlayerShotDamage>().damage);
+    }
+
 }

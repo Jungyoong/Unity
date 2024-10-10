@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Sniper
   weaponID: 3
-  fireMode: 0
   damage: 0
   range: 0
   fireRate: 0
@@ -24,5 +23,7 @@ MonoBehaviour:
   currentAmmo: 0
   maxAmmo: 0
   shotSpeed: 0
-  upwardShotSpeed: 0
-  weaponPreFab: {fileID: 0}
+  chargeSeconds: 0
+  fireMode: 1
+  shotType: 1
+  projectilePreFab: {fileID: 0}

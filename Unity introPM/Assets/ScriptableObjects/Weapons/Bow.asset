@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 619f07632e4d14a4e80eac842b463f97, type: 3}
-  m_Name: Rifle
+  m_Name: Bow
   m_EditorClassIdentifier: 
-  weaponName: Rifle
-  weaponID: 2
-  damage: 15
-  range: 100
-  fireRate: 0.1
-  bulletKnockback: 7
-  currentClip: 30
-  maxClip: 30
-  currentAmmo: 210
-  maxAmmo: 300
-  shotSpeed: 0
-  chargeSeconds: 0
-  fireMode: 0
-  shotType: 1
-  projectilePreFab: {fileID: 0}
+  weaponName: Bow
+  weaponID: 4
+  damage: 100
+  range: 1000
+  fireRate: 1
+  bulletKnockback: 25
+  currentClip: 5
+  maxClip: 5
+  currentAmmo: 60
+  maxAmmo: 60
+  shotSpeed: 100
+  chargeSeconds: 1.5
+  fireMode: 1
+  shotType: 0
+  projectilePreFab: {fileID: 3067495298782046444, guid: 1306f8b14c541e34e8d6ccef61fce8bd, type: 3}

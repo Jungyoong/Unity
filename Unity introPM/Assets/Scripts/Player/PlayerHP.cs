@@ -52,6 +52,7 @@ public class PlayerHP : MonoBehaviour
             Invoke("InvincibilityUpTime", invincibilityTime);
 
             currentHealth -= collision.gameObject.GetComponent<EnemyAI>().damage;
+            healthBar.SetHealth(currentHealth);
         }
     }
 
