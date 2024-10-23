@@ -16,13 +16,14 @@ public class WeaponData : ScriptableObject
     public int currentAmmo;
     public int maxAmmo;
     public float shotSpeed;
-    public float chargeSeconds;
+    public float maxCharge;
     public FireMode fireMode;
     public enum FireMode
     {
         auto,
         semiAuto,
-        charge
+        charge,
+        melee
     }
     public ShotType shotType;
     public enum ShotType

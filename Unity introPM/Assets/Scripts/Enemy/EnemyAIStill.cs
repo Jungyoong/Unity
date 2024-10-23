@@ -15,12 +15,12 @@ public class EnemyAIStill : MonoBehaviour
 
 
 
-    public int health;
     public int damage;
     float timeBetweenAttacks;
     bool alreadyAttacked;
     float sightRange, attackRange;
     bool playerInSightRange, playerInAttackRange;
+    bool spawnDelay = false;
     
     private void Start()
     {
@@ -28,6 +28,8 @@ public class EnemyAIStill : MonoBehaviour
         enemyType = enemyStats.enemyType;
 
         Setup();
+
+        Invoke("SpawnDelay", 2.5f);
     }
 
     private void Update()
@@ -35,7 +37,7 @@ public class EnemyAIStill : MonoBehaviour
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-        if (playerInSightRange && playerInAttackRange) AttackPlayer();
+        if (playerInSightRange && playerInAttackRange && spawnDelay) AttackPlayer();
     }
 
     private void AttackPlayer()
@@ -87,18 +89,6 @@ public class EnemyAIStill : MonoBehaviour
         Destroy(projectileObject, 3f);
     }
 
-    public void TakeDamage(int damage)
-    {
-        health -= damage;
-
-        if (health < 0) Invoke(nameof(DestroyEnemy), 0.5f);
-    }
-
-    private void DestroyEnemy()
-    {
-        Destroy(gameObject);
-    }
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -112,14 +102,11 @@ public class EnemyAIStill : MonoBehaviour
         sightRange = enemyStats.sightRange;
         attackRange = enemyStats.attackRange;
         timeBetweenAttacks = enemyStats.attackSpeed;
-        health = enemyStats.health;
         damage = enemyStats.damage;
     }
 
-    void OnTriggerEnter(Collider collider)
+    void SpawnDelay()
     {
-        if (collider.gameObject.tag == "shot")
-            TakeDamage(collider.gameObject.GetComponent<PlayerShotDamage>().damage);
+        spawnDelay = true;
     }
-
 }

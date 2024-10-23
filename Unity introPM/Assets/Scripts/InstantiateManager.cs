@@ -7,6 +7,7 @@ public class InstantiateManager : MonoBehaviour
 {
     public GameObject rbPreFab;
     public GameObject camPreFab;
+    public GameObject uMPreFab;
 
 
     internal Transform rbInstanceTransform;
@@ -21,6 +22,8 @@ public class InstantiateManager : MonoBehaviour
     internal Transform camPos;
     internal Transform orientation;
     internal PlayerHP playerHP;
+    internal PlayerStamina playerStamina;
+    internal PlayerUpgradeStats playerUpgradeStats;
 
     // Start is called before the first frame update
     void Awake()
@@ -28,11 +31,12 @@ public class InstantiateManager : MonoBehaviour
         //handles the instantiate values for the player PreFab
         GameObject rbInstance = Instantiate(rbPreFab);
         rbInstanceTransform = rbInstance.transform;
-        playerEquip = rbInstance.AddComponent<PlayerEquip>();
         orientation = rbInstance.transform.GetChild(0);
         camPos = rbInstance.transform.GetChild(1);
         rb = rbInstance.GetComponent<Rigidbody>();
         playerHP = rbInstance.GetComponent<PlayerHP>();
+        playerEquip = rbInstance.GetComponent<PlayerEquip>();
+        playerStamina = rbInstance.GetComponent<PlayerStamina>();
 
         //handles the instantiate values for the camera PreFab
         camInstance = Instantiate(camPreFab);
@@ -41,6 +45,9 @@ public class InstantiateManager : MonoBehaviour
         cam = camInstance.GetComponent<Transform>();
         weaponSlot = camInstance.transform.GetChild(0);
         attackPoint = camInstance.transform.GetChild(1);
+
+        GameObject upgradeManagerInstance = Instantiate(uMPreFab);
+        playerUpgradeStats = upgradeManagerInstance.GetComponent<PlayerUpgradeStats>();
     }
 
     // Update is called once per frame

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using System;
 using static WeaponData;
 
 public class WeaponSystem : MonoBehaviour
@@ -18,7 +19,8 @@ public class WeaponSystem : MonoBehaviour
     internal Transform cam;
     internal GameObject projectilePreFab;
 
-    
+    [SerializeField]
+    TrailRenderer bulletTrail;
 
     public string hitName;
     public bool equip = false;
@@ -34,8 +36,13 @@ public class WeaponSystem : MonoBehaviour
     public float fireRate;
     public float bulletKnockback;
     public float shotSpeed;
+    float maxCharge;
+    float charge = 0f;
+    bool isCharging = false;
+    float multiplier;
+    float addDamage;
 
-
+    PlayerUpgradeStats playerUpgradeStats;
     public FireMode fireMode;
     public ShotType shotType;
 
@@ -53,45 +60,105 @@ public class WeaponSystem : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0) && canFire && equip && fireMode == FireMode.auto && currentClip > 0)
-            Shoot();
-
-        if (Input.GetMouseButtonDown(0) && canFire && equip && fireMode == FireMode.semiAuto && currentClip > 0)
-            Shoot();
+        if (canFire && equip && currentClip > 0)
+        {
+            switch (fireMode)
+            {
+                case FireMode.auto:
+                    if (Input.GetMouseButton(0))
+                        Shoot(1f);
+                    break;
+                case FireMode.semiAuto:
+                    if (Input.GetMouseButtonDown(0))
+                        Shoot(1f);
+                    break;
+                case FireMode.charge:
+                    ChargeShoot();
+                    break;
+            }
+        }
         
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && equip)
             reloadClip();
     }
     
-    void Shoot()
+    void Shoot(float chargePerc)
     {
         canFire = false;
         Vector3 forceDirection = cam.transform.forward;
 
         //Bullet knockback
-        BulletKnockback(forceDirection);
+        rb.velocity = Vector3.zero;
+        rb.AddForce(-forceDirection * bulletKnockback * chargePerc, ForceMode.VelocityChange);
 
-        //checks if the player's crosshair has hit an object
-        RaycastHit hit;
+        // Separate horizontal and vertical components
+        Vector3 horizontalForce = new Vector3(forceDirection.x, 0, forceDirection.z).normalized;
+        Vector3 verticalForce = new Vector3(0, forceDirection.y, 0);
 
-        if (shotType == ShotType.hitscan && Physics.Raycast(cam.position, cam.forward, out hit, 500f, ~ignoreRaycast))
-        {   
-            if (hit.collider.gameObject.tag == "Enemy")
-                DealDamage(hit);
+        // Scale the horizontal force
+        float horizontalMultiplier = 3f; // Adjust this value to increase the horizontal force
+        Vector3 totalForce = (horizontalForce * horizontalMultiplier + verticalForce) * bulletKnockback * chargePerc;
+
+        //hitscan weapon logic
+        if (shotType == ShotType.hitscan)
+        {
+            Ray ray = new Ray(weaponSlot.position, cam.forward);
+            TrailRenderer trail = Instantiate(bulletTrail, weaponSlot.position, Quaternion.identity);
+            Vector3 endPosition;
+
+            if (Physics.Raycast(cam.position, cam.forward, out RaycastHit hit, 500f, ~ignoreRaycast))
+            {
+                endPosition = hit.point;
+
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                    DealDamage(hit, chargePerc);
+            }
+            else
+                endPosition = ray.GetPoint(500f);
+
+            //spawns the bullet trail
+            StartCoroutine(SpawnTrail(trail, endPosition));
         }
 
+        //projectile weapon logic
         if (shotType == ShotType.projectile)
         {
             Vector3 forceToAdd = forceDirection * shotSpeed + cam.transform.up * 1;
             GameObject projectile = Instantiate(projectilePreFab, attackPoint.position, cam.rotation);
-            projectile.gameObject.GetComponent<PlayerShotDamage>().damage = damage;
+            projectile.gameObject.GetComponent<PlayerShotDamage>().damage = (int)Math.Ceiling(damage * chargePerc * playerUpgradeStats.projectileDamageMulti);
+;
             Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-            projectileRb.AddForce(forceToAdd, ForceMode.Impulse);
+            projectileRb.AddForce(forceToAdd * chargePerc, ForceMode.Impulse);
             Destroy(projectile, 2.5f);
         }
 
         currentClip--;
-        StartCoroutine("cooldownFire");
+        StartCoroutine(CooldownFire());
+    }
+
+    void ChargeShoot()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            isCharging = true;
+        }
+        
+        if (Input.GetMouseButtonUp(0))
+        {
+            isCharging = false;
+            if (charge > 0)
+            {
+                charge /= maxCharge;
+                Shoot(charge);
+            }
+            charge = 0f;
+        }
+
+        if (isCharging)
+            charge += Time.deltaTime;
+        
+        if (charge > maxCharge)
+            charge = maxCharge;
     }
 
 
@@ -120,36 +187,58 @@ public class WeaponSystem : MonoBehaviour
         }
     }
     
-    IEnumerator cooldownFire()
+    IEnumerator CooldownFire()
     {
         yield return new WaitForSeconds(fireRate);
         canFire = true;
     }
 
-    void BulletKnockback(Vector3 forceDirection)
+   IEnumerator SpawnTrail(TrailRenderer Trail, Vector3 hit)
     {
-        rb.velocity = new Vector3(0, 0, 0);
-        rb.AddForce(-forceDirection * bulletKnockback, ForceMode.VelocityChange);
+        Vector3 startPosition = Trail.transform.position;
+        float distance = Vector3.Distance(startPosition, hit);
+        float travelTime = distance / 2000f;
+        float time = 0;
+
+        while (time < travelTime)
+        {
+            Trail.transform.position = Vector3.Lerp(startPosition, hit, time / travelTime);
+            time += Time.deltaTime;
+
+            yield return null;
+        }
+        Trail.transform.position = hit;
+
+        Destroy(Trail.gameObject, Trail.time);
     }
 
-    void DealDamage(RaycastHit hit)
+
+    void DealDamage(RaycastHit hit, float chargePerc)   //improve this later
     {
-        if (hit.transform.GetComponent<EnemyAI>() != null)
-        {
-            EnemyAI enemyHP = hit.transform.GetComponent<EnemyAI>();
-            enemyHP.TakeDamage(damage);
-        }
-        if (hit.transform.GetComponent<EnemyAIStill>() != null)
-        {
-            EnemyAIStill enemyHP = hit.transform.GetComponent<EnemyAIStill>();
-            enemyHP.TakeDamage(damage);
-        }
+        EnemyHP enemyHP = hit.transform.GetComponent<EnemyHP>();
+
+        switch (fireMode)
+            {
+                case FireMode.semiAuto:
+                    addDamage = playerUpgradeStats.semiAutoDamageAdd;
+                    multiplier = playerUpgradeStats.semiAutoDamageMulti;
+                    break;
+                case FireMode.auto:
+                    addDamage = playerUpgradeStats.autoDamageAdd;
+                    multiplier = playerUpgradeStats.autoDamageMulti;
+                    break;
+            }
+
+        enemyHP.TakeDamage((int)Math.Ceiling((damage + addDamage) * chargePerc * multiplier));
     }
     
     public void Setup()
     {
         weaponID = currentWeapon.weaponID;
         weaponName = currentWeapon.weaponName;
+        fireMode = currentWeapon.fireMode;
+        shotType = currentWeapon.shotType;
+
         currentClip = currentWeapon.currentClip;
         maxClip = currentWeapon.maxClip;
         currentAmmo = currentWeapon.currentAmmo;
@@ -159,12 +248,13 @@ public class WeaponSystem : MonoBehaviour
         damage = currentWeapon.damage;
         shotSpeed = currentWeapon.shotSpeed;
         bulletKnockback = currentWeapon.bulletKnockback;
-        rb = instantiateManager.rb;
+        maxCharge = currentWeapon.maxCharge;
+
         attackPoint = instantiateManager.attackPoint;
         weaponSlot = instantiateManager.weaponSlot;
-        cam = instantiateManager.cam;
         projectilePreFab = currentWeapon.projectilePreFab;
-        fireMode = currentWeapon.fireMode;
-        shotType = currentWeapon.shotType;
+        cam = instantiateManager.cam;
+        rb = instantiateManager.rb;
+        playerUpgradeStats = instantiateManager.playerUpgradeStats;
     }
 }

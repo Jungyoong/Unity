@@ -16,14 +16,14 @@ MonoBehaviour:
   weaponID: 4
   damage: 100
   range: 1000
-  fireRate: 1
-  bulletKnockback: 25
+  fireRate: 0.01
+  bulletKnockback: 40
   currentClip: 5
   maxClip: 5
   currentAmmo: 60
   maxAmmo: 60
   shotSpeed: 100
-  chargeSeconds: 1.5
-  fireMode: 1
+  maxCharge: 2
+  fireMode: 2
   shotType: 0
-  projectilePreFab: {fileID: 3067495298782046444, guid: 1306f8b14c541e34e8d6ccef61fce8bd, type: 3}
+  projectilePreFab: {fileID: 2054889004620294077, guid: 1306f8b14c541e34e8d6ccef61fce8bd, type: 3}

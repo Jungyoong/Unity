@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4560876152663604292}
   - component: {fileID: 550135924093911533}
   - component: {fileID: 2992301148523163938}
+  - component: {fileID: 390622323447461565}
   m_Layer: 0
   m_Name: ChasingEnemy
   m_TagString: Enemy
@@ -182,13 +183,26 @@ MonoBehaviour:
   enemyType: 0
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 0
-  health: 100
   damage: 0
   timeBetweenAttacks: 1
   sightRange: 40
   attackRange: 3
   playerInSightRange: 0
   playerInAttackRange: 0
+--- !u!114 &390622323447461565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862278192767912166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b67cc37fd8f0e7468245d2aae7e47ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyStats: {fileID: 0}
+  health: 0
 --- !u!1 &5528342840378683907
 GameObject:
   m_ObjectHideFlags: 0

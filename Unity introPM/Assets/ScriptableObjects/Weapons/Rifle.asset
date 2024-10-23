@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: Rifle
   weaponID: 2
   damage: 15
-  range: 100
+  range: 200
   fireRate: 0.1
   bulletKnockback: 7
   currentClip: 30
@@ -23,7 +23,7 @@ MonoBehaviour:
   currentAmmo: 210
   maxAmmo: 300
   shotSpeed: 0
-  chargeSeconds: 0
+  maxCharge: 0
   fireMode: 0
   shotType: 1
   projectilePreFab: {fileID: 0}

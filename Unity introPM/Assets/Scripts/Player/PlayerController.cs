@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight;
     public float airMultiplier;
     public float airSpeed;
+    public bool isMoving;
 
     
     [Header("Ground Check")]
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     Vector3 moveDirection;
     internal Rigidbody rb;
+    internal PlayerStamina playerStamina;
 
     public MovementState state; 
     public enum MovementState
@@ -39,31 +41,30 @@ public class PlayerController : MonoBehaviour
         air
     }
     
+    void Awake()
+    {
+        instantiateManager = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        instantiateManager = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>();
         orientation = instantiateManager.orientation;
         rb = instantiateManager.rb;
+        playerStamina = instantiateManager.playerStamina;
     }
-
-    void FixedUpdate()
-    {
-    }
-
 
     // Update is called once per frame
     void Update()
     {
         onGround = Physics.Raycast(transform.position, -transform.up, playerHeight * 0.5f + 0.2f, whatIsGround);
 
-        speedControl();
-        stateHandler();
-        movePlayer();
+        SpeedControl();
+        StateHandler();
+        MovePlayer();
 
         if (Input.GetKeyDown(KeyCode.Space))
-            jump();
+            Jump();
 
         if (onGround)
         {
@@ -75,39 +76,45 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    public void stateHandler()
+    public void StateHandler()
     {
-        if (onGround && Input.GetKey(sprintKey))
+        if (onGround && Input.GetKey(sprintKey) && playerStamina.currentStamina > 0 && isMoving)
         {
             state = MovementState.sprinting;
+            playerStamina.isSprint = true;
             moveSpeed = sprintSpeed;
         }
         else if (onGround)
         {
             state = MovementState.walking;
+            playerStamina.isSprint = false;
             moveSpeed = walkSpeed;
         }
         else
         {
             state = MovementState.air;
+            playerStamina.isSprint = false;
         }
 
     }
 
-    public void movePlayer()
+    public void MovePlayer()
     {
         moveDirection = (orientation.forward * Input.GetAxisRaw("Vertical")) + (orientation.right * Input.GetAxisRaw("Horizontal"));
+
+        if (Input.GetAxisRaw("Vertical") != 0 || Input.GetAxisRaw("Horizontal") != 0)
+            isMoving = true;
+        else
+            isMoving = false;
 
         if (onGround)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
         else if (!onGround)
-        {
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
-        }
     }
 
-    public void jump()
+    public void Jump()
     {
         if (onGround)
         {
@@ -119,7 +126,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public void speedControl()
+    public void SpeedControl()
     {
         Vector3 flatvel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
@@ -129,7 +136,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
     }
-    public void airSpeedControl()
+    public void AirSpeedControl()
     {
         Vector3 yFlatvel = new Vector3(0f, rb.velocity.y, 0f);
 

@@ -6,19 +6,16 @@ using UnityEngine;
 public class PlayerEquip : MonoBehaviour
 {
     internal WeaponSystem weaponScript;
-    Transform cam;
     Transform weaponSlot;
 
 
     public bool equip;
     public int equipID;
-    public float damage;
     GameObject equippedWeapon;
 
     // Start is called before the first frame update
     void Start()
     {
-        cam = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>().cam;
         weaponSlot = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>().weaponSlot;
         equip = false;
     }
@@ -49,7 +46,7 @@ public class PlayerEquip : MonoBehaviour
     }
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "weapon" && !equip)
+        if (collider.gameObject.CompareTag("weapon") && !equip)
         {
             // Attach the weapon to the weapon slot
             collider.transform.SetPositionAndRotation(weaponSlot.position, weaponSlot.rotation);

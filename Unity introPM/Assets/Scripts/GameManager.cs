@@ -6,13 +6,16 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.AI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
     public bool isPaused = false;
+    public bool gameOver = false;
 
     InstantiateManager instantiateManager;
     public GameObject pauseMenu;
+    public GameObject gameOverMenu;
 
     public Image healthBar;
     public TextMeshProUGUI clipCounter;
@@ -54,7 +57,7 @@ public class GameManager : MonoBehaviour
                 ammoCounter.gameObject.SetActive(false);
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && !gameOver)
             {
                 if (!isPaused)
                 {
@@ -74,6 +77,15 @@ public class GameManager : MonoBehaviour
                 }
            
             }
+        }
+
+        if (gameOver)
+        {
+            gameOverMenu.SetActive(true);
+
+            Time.timeScale = 0;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 
@@ -106,6 +118,7 @@ public class GameManager : MonoBehaviour
     public void Loadlevel(int sceneID)
     {
         SceneManager.LoadScene(sceneID);
+        Time.timeScale = 1;
     }
 
     public void RestartLevel()
@@ -120,5 +133,11 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
 
         isPaused = false;
+    }
+
+    public void RestartGame(int sceneID)
+    {
+        SceneManager.LoadScene(sceneID);
+
     }
 }

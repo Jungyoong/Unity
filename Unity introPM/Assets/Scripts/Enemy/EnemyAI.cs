@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using static EnemySO;
@@ -19,33 +20,40 @@ public class EnemyAI : MonoBehaviour
     bool walkPointSet;
     public float walkPointRange;
 
-    public int health;
+    
     public int damage;
     public float timeBetweenAttacks;
     bool alreadyAttacked;
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
+    bool spawnDelay = false;
     
-    private void Start()
+    void Start()
     {
         player = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>().rbInstanceTransform.transform;
         agent = GetComponent<NavMeshAgent>();
         enemyType = enemyStats.enemyType;
 
+        Invoke(nameof(SpawnDelay), 2.5f);
+
         Setup();
     }
 
-    private void Update()
+    void Update()
     {
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-    
-        if (!playerInSightRange && !playerInAttackRange) Patroling();
-        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
-        if (playerInSightRange && playerInAttackRange) AttackPlayer();
+
+        if (spawnDelay)
+        {
+            if (!playerInSightRange && !playerInAttackRange) Patroling();
+            if (playerInSightRange && !playerInAttackRange) ChasePlayer();
+            if (playerInSightRange && playerInAttackRange) AttackPlayer();
+        }
+        
     }
 
-    private void Patroling()
+    void Patroling()
     {
         if (!walkPointSet) SearchWalkPoint();
 
@@ -59,7 +67,7 @@ public class EnemyAI : MonoBehaviour
 
     }
 
-    private void SearchWalkPoint()
+    void SearchWalkPoint()
     {
         float randomZ = UnityEngine.Random.Range(-walkPointRange, walkPointRange);
         float randomX = UnityEngine.Random.Range(-walkPointRange, walkPointRange);
@@ -70,12 +78,12 @@ public class EnemyAI : MonoBehaviour
             walkPointSet = true;
     }
 
-    private void ChasePlayer()
+    void ChasePlayer()
     {
         agent.SetDestination(player.position);
     }
 
-    private void AttackPlayer()
+    void AttackPlayer()
     {
 
         agent.SetDestination(transform.position);
@@ -95,24 +103,12 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void ResetAttack()
+    void ResetAttack()
     {
         alreadyAttacked = false;
     }
 
-    public void TakeDamage(int damage)
-    {
-        health -= damage;
-
-        if (health < 0) Invoke(nameof(DestroyEnemy), 0.5f);
-    }
-
-    private void DestroyEnemy()
-    {
-        Destroy(gameObject);
-    }
-
-    private void OnDrawGizmosSelected()
+    void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position , attackRange);
@@ -120,19 +116,17 @@ public class EnemyAI : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, sightRange);
     }
 
-    private void Setup()
+    void Setup()
     {
         sightRange = enemyStats.sightRange;
         attackRange = enemyStats.attackRange;
         timeBetweenAttacks = enemyStats.attackSpeed;
-        health = enemyStats.health;
         damage = enemyStats.damage;
     }
 
-    void OnTriggerEnter(Collider collider)
+    void SpawnDelay()
     {
-        if (collider.gameObject.tag == "shot")
-            TakeDamage(collider.gameObject.GetComponent<PlayerShotDamage>().damage);
+        spawnDelay = true;
     }
 }
 

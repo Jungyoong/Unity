@@ -121,9 +121,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeapon: {fileID: 11400000, guid: 8d0aa335e053b184e9264443d3e3798a, type: 2}
-  player:
+  ignoreRaycast:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
+  bulletTrail: {fileID: 8032963775366569592, guid: 5a1ecc1ba5c9eed4093da1e4973c26b2, type: 3}
   hitName: 
   equip: 0
   canFire: 0
@@ -133,9 +134,10 @@ MonoBehaviour:
   maxClip: 0
   currentAmmo: 0
   maxAmmo: 0
-  fireMode: 0
   damage: 0
   range: 0
   fireRate: 0
   bulletKnockback: 0
-  setUp: 0
+  shotSpeed: 0
+  fireMode: 0
+  shotType: 0

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6491157091817682838}
   - component: {fileID: 5965615864447984408}
   - component: {fileID: 8176919920346572966}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Bow
   m_TagString: weapon
   m_Icon: {fileID: 0}
@@ -124,6 +124,7 @@ MonoBehaviour:
   ignoreRaycast:
     serializedVersion: 2
     m_Bits: 0
+  bulletTrail: {fileID: 0}
   hitName: 
   equip: 0
   canFire: 0

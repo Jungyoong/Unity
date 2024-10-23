@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1589688539079159784}
   - component: {fileID: 521166153950327874}
   - component: {fileID: -1840879916673010031}
+  - component: {fileID: 418845071055160640}
   m_Layer: 0
   m_Name: QuadShooterEnemy
   m_TagString: Enemy
@@ -154,8 +155,21 @@ MonoBehaviour:
   enemyStats: {fileID: 11400000, guid: 5d5639e8bbe064349bcc6aa9d87db153, type: 2}
   orientation: {fileID: 5089021905073711311}
   enemyType: 7
-  health: 0
   damage: 0
+--- !u!114 &418845071055160640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3794177419644169243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b67cc37fd8f0e7468245d2aae7e47ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyStats: {fileID: 0}
+  health: 0
 --- !u!1 &7894816536580467058
 GameObject:
   m_ObjectHideFlags: 0

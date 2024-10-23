@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 304693551499513157}
   - component: {fileID: 4998539908222199278}
   - component: {fileID: 7996690850666861924}
+  - component: {fileID: -2811003076032664369}
+  - component: {fileID: -2294536198523725533}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -180,7 +182,8 @@ MonoBehaviour:
   healthRestore: 20
   maxHealth: 100
   currentHealth: 0
-  healthBar: {fileID: 8715635588852131659, guid: 03a3fcfaaa40cdd48a9ec284de499ec1, type: 3}
+  invincibility: 0
+  invincibilityTime: 2
 --- !u!114 &4998539908222199278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +211,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   equip: 0
   equipID: 0
-  damage: 0
+--- !u!114 &-2811003076032664369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600473597868822738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e50b70a3c56006489c9a55b540b6c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!114 &-2294536198523725533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600473597868822738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 096980c7f06ee9e45920898363f4d0f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3402757749003050972
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -12,9 +12,12 @@ public class PlayerHP : MonoBehaviour
 
     GameObject healthBarObject;
     HealthBar healthBar;
+    GameObject gameManagerInstance;
+    GameManager gameManager;
 
     void Awake()
     {
+        gameManagerInstance = GameObject.Find("GameManager");
         healthBarObject = GameObject.Find("Health Bar");
         healthBar = healthBarObject.GetComponent<HealthBar>();  //Improve this part later
     }
@@ -34,6 +37,11 @@ public class PlayerHP : MonoBehaviour
             currentHealth = 0;
             healthBar.SetHealth(currentHealth);
         }
+
+        if (currentHealth < 1)
+        {
+            gameManagerInstance.GetComponent<GameManager>().gameOver = true;
+        }
     }
 
     void TakeDamage(int damage)
@@ -46,10 +54,10 @@ public class PlayerHP : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Enemy" && invincibility == false && collision.gameObject.GetComponent<EnemyAI>() != null && collision.gameObject.GetComponent<EnemyAI>().enemyType == EnemySO.EnemyType.chasing)
+        if (collision.gameObject.CompareTag("Enemy") && invincibility == false && collision.gameObject.GetComponent<EnemyAI>() != null && collision.gameObject.GetComponent<EnemyAI>().enemyType == EnemySO.EnemyType.chasing)
         {
             invincibility = true;
-            Invoke("InvincibilityUpTime", invincibilityTime);
+            Invoke(nameof(InvincibilityUpTime), invincibilityTime);
 
             currentHealth -= collision.gameObject.GetComponent<EnemyAI>().damage;
             healthBar.SetHealth(currentHealth);
@@ -58,15 +66,15 @@ public class PlayerHP : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "EnemyShot" && invincibility == false)
+        if (collider.gameObject.CompareTag("EnemyShot") && invincibility == false)
         {
             invincibility = true;
-            Invoke("InvincibilityUpTime", invincibilityTime);
+            Invoke(nameof(InvincibilityUpTime), invincibilityTime);
 
             currentHealth -= collider.GetComponent<EnemyShotDamage>().damage;
             healthBar.SetHealth(currentHealth);
         }
-        if((currentHealth < maxHealth) && collider.gameObject.tag == "healthPickup")
+        if ((currentHealth < maxHealth) && collider.gameObject.CompareTag("healthPickup"))
         {
             currentHealth += healthRestore;
 

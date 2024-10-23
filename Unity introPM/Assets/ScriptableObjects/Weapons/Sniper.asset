@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Sniper
   weaponID: 3
-  damage: 0
-  range: 0
-  fireRate: 0
-  bulletKnockback: 0
-  currentClip: 0
-  maxClip: 0
-  currentAmmo: 0
-  maxAmmo: 0
+  damage: 200
+  range: 1000
+  fireRate: 1.8
+  bulletKnockback: 40
+  currentClip: 8
+  maxClip: 8
+  currentAmmo: 60
+  maxAmmo: 60
   shotSpeed: 0
-  chargeSeconds: 0
+  maxCharge: 0
   fireMode: 1
   shotType: 1
   projectilePreFab: {fileID: 0}
