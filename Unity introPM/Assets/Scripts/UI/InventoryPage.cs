@@ -110,16 +110,19 @@ public class InventoryPage : MonoBehaviour
     }
     public void Show()
     {
-        gameObject.SetActive(true);
-        ResetSelection();
+        if (Time.timeScale == 1)
+        {
+            gameObject.SetActive(true);
+            ResetSelection();
 
-        tempYsensitivity = cameraControl.Ysensitivity;
-        tempXsensitivity = cameraControl.Xsensitivity;
-        cameraControl.Ysensitivity = 0f;
-        cameraControl.Xsensitivity = 0f;
+            tempYsensitivity = cameraControl.Ysensitivity;
+            tempXsensitivity = cameraControl.Xsensitivity;
+            cameraControl.Ysensitivity = 0f;
+            cameraControl.Xsensitivity = 0f;
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     private void ResetSelection()
@@ -138,13 +141,17 @@ public class InventoryPage : MonoBehaviour
 
     public void Hide()
     {
-        gameObject.SetActive(false);
-        ResetDraggedItem();
+        if (Time.timeScale == 1)
+        {
+            gameObject.SetActive(false);
+            ResetDraggedItem();
 
-        cameraControl.Ysensitivity = tempYsensitivity;
-        cameraControl.Xsensitivity = tempXsensitivity;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+            cameraControl.Ysensitivity = tempYsensitivity;
+            cameraControl.Xsensitivity = tempXsensitivity;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        
     }
 
     public void ResetDraggedItem()

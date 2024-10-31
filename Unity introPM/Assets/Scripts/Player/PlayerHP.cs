@@ -44,35 +44,32 @@ public class PlayerHP : MonoBehaviour
         }
     }
 
-    void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
-
-        healthBar.SetHealth(currentHealth);
+        if (!invincibility)
+        {
+            invincibility = true;
+            currentHealth -= damage;
+            Invoke(nameof(InvincibilityUpTime), invincibilityTime);
+            healthBar.SetHealth(currentHealth);
+        }
+        
     }
 
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy") && invincibility == false && collision.gameObject.GetComponent<EnemyAI>() != null && collision.gameObject.GetComponent<EnemyAI>().enemyType == EnemySO.EnemyType.chasing)
+        if (collision.gameObject.CompareTag("Enemy") && collision.gameObject.GetComponent<EnemyAI>() != null && collision.gameObject.GetComponent<EnemyAI>().enemyType == EnemySO.EnemyType.chasing)
         {
-            invincibility = true;
-            Invoke(nameof(InvincibilityUpTime), invincibilityTime);
-
-            currentHealth -= collision.gameObject.GetComponent<EnemyAI>().damage;
-            healthBar.SetHealth(currentHealth);
+            TakeDamage(collision.gameObject.GetComponent<EnemyAI>().damage);
         }
     }
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.CompareTag("EnemyShot") && invincibility == false)
+        if (collider.gameObject.CompareTag("EnemyShot"))
         {
-            invincibility = true;
-            Invoke(nameof(InvincibilityUpTime), invincibilityTime);
-
-            currentHealth -= collider.GetComponent<EnemyShotDamage>().damage;
-            healthBar.SetHealth(currentHealth);
+            TakeDamage(collider.gameObject.GetComponent<EnemyShotDamage>().damage);
         }
         if ((currentHealth < maxHealth) && collider.gameObject.CompareTag("healthPickup"))
         {

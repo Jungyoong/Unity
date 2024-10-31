@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InstantiateManager : MonoBehaviour
 {
@@ -24,6 +24,8 @@ public class InstantiateManager : MonoBehaviour
     internal PlayerHP playerHP;
     internal PlayerStamina playerStamina;
     internal PlayerUpgradeStats playerUpgradeStats;
+
+    public int enemyCount;
 
     // Start is called before the first frame update
     void Awake()
@@ -53,6 +55,7 @@ public class InstantiateManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (enemyCount < 1)
+            SceneManager.LoadScene(2);
     }
 }

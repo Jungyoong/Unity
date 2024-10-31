@@ -89,15 +89,7 @@ public class WeaponSystem : MonoBehaviour
 
         //Bullet knockback
         rb.velocity = Vector3.zero;
-        rb.AddForce(-forceDirection * bulletKnockback * chargePerc, ForceMode.VelocityChange);
-
-        // Separate horizontal and vertical components
-        Vector3 horizontalForce = new Vector3(forceDirection.x, 0, forceDirection.z).normalized;
-        Vector3 verticalForce = new Vector3(0, forceDirection.y, 0);
-
-        // Scale the horizontal force
-        float horizontalMultiplier = 3f; // Adjust this value to increase the horizontal force
-        Vector3 totalForce = (horizontalForce * horizontalMultiplier + verticalForce) * bulletKnockback * chargePerc;
+        rb.AddForce(-forceDirection * bulletKnockback * chargePerc, ForceMode.Impulse);
 
         //hitscan weapon logic
         if (shotType == ShotType.hitscan)
@@ -145,6 +137,8 @@ public class WeaponSystem : MonoBehaviour
         
         if (Input.GetMouseButtonUp(0))
         {
+            rb.useGravity = true;
+
             isCharging = false;
             if (charge > 0)
             {
@@ -155,7 +149,12 @@ public class WeaponSystem : MonoBehaviour
         }
 
         if (isCharging)
+        {
             charge += Time.deltaTime;
+            rb.useGravity = false;
+            rb.velocity = Vector3.zero;
+            rb.AddForce(-cam.transform.forward * 1f, ForceMode.VelocityChange);
+        }
         
         if (charge > maxCharge)
             charge = maxCharge;

@@ -10,6 +10,7 @@ TagManager:
   - shot
   - Enemy
   - EnemyShot
+  - Boss
   layers:
   - Default
   - TransparentFX

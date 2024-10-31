@@ -85,10 +85,8 @@ public class EnemyAI : MonoBehaviour
 
     void AttackPlayer()
     {
-
         agent.SetDestination(transform.position);
         transform.LookAt(player);
-
 
         if (!alreadyAttacked && enemyType != EnemyType.chasing)
         {

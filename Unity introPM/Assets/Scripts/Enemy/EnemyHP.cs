@@ -5,15 +5,28 @@ using UnityEngine;
 public class EnemyHP : MonoBehaviour
 {
     public int health;
-
+    internal InstantiateManager instantiateManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (gameObject.GetComponent<EnemyAI>() != null)
-            health = gameObject.GetComponent<EnemyAI>().enemyStats.health;
-        else
-            health = gameObject.GetComponent<EnemyAIStill>().enemyStats.health;
+        instantiateManager = GameObject.Find("Instantiate Manager").GetComponent<InstantiateManager>();
+        instantiateManager.enemyCount++;
+        switch (gameObject)
+        {
+            case var _ when gameObject.GetComponent<EnemyAI>() != null:
+                health = gameObject.GetComponent<EnemyAI>().enemyStats.health;
+                break;
+            case var _ when gameObject.GetComponent<EnemyAIStill>() != null:
+                health = gameObject.GetComponent<EnemyAIStill>().enemyStats.health;
+                break;
+            case var _ when gameObject.GetComponent<BossAI>() != null:
+                health = gameObject.GetComponent<BossAI>().bossStats.health;
+                break;
+            default:
+                Debug.LogWarning("No matching component found!");
+                break;
+        }
     }
 
     public void TakeDamage(int damage)
@@ -28,6 +41,7 @@ public class EnemyHP : MonoBehaviour
     void DestroyEnemy()
     {
         Destroy(gameObject);
+        instantiateManager.enemyCount--;
     }
 
     void OnTriggerEnter(Collider collider)

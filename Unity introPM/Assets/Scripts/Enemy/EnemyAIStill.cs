@@ -37,44 +37,65 @@ public class EnemyAIStill : MonoBehaviour
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-        if (playerInSightRange && playerInAttackRange && spawnDelay) AttackPlayer();
+        if (playerInSightRange && playerInAttackRange && spawnDelay && !alreadyAttacked) AttackPlayer();
     }
 
     private void AttackPlayer()
     {
-
-        orientation.LookAt(player);
-
-        if (!alreadyAttacked && enemyType != EnemyType.quadSided)
+        switch (enemyType)
         {
-            for (int i = 0; i < 3; i++)
-            {
-                StartCoroutine(BurstShoot(orientation.transform.forward, 0.2f * i, 1));
-            }
+            case EnemyType.quadSided:
+                for (int i = 0; i < 3; i++)
+                {
+                    StartCoroutine(BurstShoot(transform.forward, 0.2f * i, 1));
+                    StartCoroutine(BurstShoot(transform.forward, 0.2f * i, -1));
+                    StartCoroutine(BurstShoot(transform.right, 0.2f * i, 1));
+                    StartCoroutine(BurstShoot(transform.right, 0.2f * i, -1));
+                }
 
-            alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), timeBetweenAttacks);
+                alreadyAttacked = true;
+                Invoke(nameof(ResetAttack), timeBetweenAttacks);
+                
+            break;
+
+            case EnemyType.laser:
+                orientation.LookAt(player);
+                Invoke(nameof(LaserAttack), 2f);
+
+                alreadyAttacked = true;
+                Invoke(nameof(ResetAttack), timeBetweenAttacks);
+
+                break;
+
+            default:
+                orientation.LookAt(player);
+
+                for (int i = 0; i < 3; i++)
+                    StartCoroutine(BurstShoot(orientation.transform.forward, 0.2f * i, 1));
+                
+                alreadyAttacked = true;
+                Invoke(nameof(ResetAttack), timeBetweenAttacks);
+            
+            break;
         }
 
-        if (!alreadyAttacked && enemyType == EnemyType.quadSided)
-        {   
-            for (int i = 0; i < 3; i++)
-            {
-                StartCoroutine(BurstShoot(transform.forward, 0.2f * i, 1));
-                StartCoroutine(BurstShoot(transform.forward, 0.2f * i, -1));
-                StartCoroutine(BurstShoot(transform.right, 0.2f * i, 1));
-                StartCoroutine(BurstShoot(transform.right, 0.2f * i, -1));
-            }
-
-            alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), timeBetweenAttacks);
-        }
 
     }
 
     private void ResetAttack()
     {
         alreadyAttacked = false;
+    }
+
+    void LaserAttack()
+    {
+        if (Physics.SphereCast(transform.position, 1f, orientation.transform.forward, out RaycastHit hit, 400))
+            {
+                if (hit.collider.gameObject.CompareTag("Player"))
+                {
+                    hit.collider.GetComponent<PlayerHP>().TakeDamage(damage);
+                }
+            }
     }
 
     IEnumerator BurstShoot(Vector3 direction, float delayTime, int negative)
@@ -95,6 +116,8 @@ public class EnemyAIStill : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, sightRange);
+        Gizmos.color = Color.blue;
+        Debug.DrawRay(transform.position, orientation.transform.forward);
     }
 
     private void Setup()
@@ -109,4 +132,5 @@ public class EnemyAIStill : MonoBehaviour
     {
         spawnDelay = true;
     }
+
 }

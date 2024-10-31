@@ -107,16 +107,16 @@ public class PlayerController : MonoBehaviour
         else
             isMoving = false;
 
-        if (onGround)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        if (onGround && rb.useGravity)
+            rb.AddForce(moveDirection.normalized * moveSpeed * 5f, ForceMode.Force);
 
-        else if (!onGround)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+        else if (!onGround && rb.useGravity)
+            rb.AddForce(moveDirection.normalized * moveSpeed * 5f * airMultiplier, ForceMode.Force);
     }
 
     public void Jump()
     {
-        if (onGround)
+        if (onGround && rb.useGravity)
         {
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
@@ -127,15 +127,21 @@ public class PlayerController : MonoBehaviour
 
 
     public void SpeedControl()
-    {
-        Vector3 flatvel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+{
+    Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+    float excessSpeed = flatVel.magnitude - moveSpeed;
 
-        if (flatvel.magnitude > moveSpeed)
-        {
-            Vector3 limitedVel = flatvel.normalized * moveSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
-        }
+    if (excessSpeed > 0)
+    {
+        // Adjust damping factor based on excess speed
+        float dynamicDampingFactor = Mathf.Lerp(20f, 2f, excessSpeed / 20f);
+
+        Vector3 limitedVel = flatVel.normalized * moveSpeed;
+        rb.velocity = Vector3.Lerp(rb.velocity, new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z), Time.deltaTime * dynamicDampingFactor);
     }
+}
+
+
     public void AirSpeedControl()
     {
         Vector3 yFlatvel = new Vector3(0f, rb.velocity.y, 0f);

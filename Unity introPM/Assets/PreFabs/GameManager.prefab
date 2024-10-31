@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1107662972407936771}
   - component: {fileID: 9023162083584588171}
+  - component: {fileID: -2232474761388338129}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,7 +46,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPaused: 0
+  gameOver: 0
   pauseMenu: {fileID: 0}
+  gameOverMenu: {fileID: 0}
   healthBar: {fileID: 0}
   clipCounter: {fileID: 0}
   ammoCounter: {fileID: 0}
+--- !u!114 &-2232474761388338129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2954543646756978177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b295ebd5af823804cb195ff125906fc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

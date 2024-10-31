@@ -155,12 +155,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a45f572446600e4981ce63d4826a490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 7
-  sprintSpeed: 10
+  walkSpeed: 5
+  sprintSpeed: 8
   groundDrag: 8
   jumpHeight: 9
   airMultiplier: 0.4
-  airSpeed: 30
+  airSpeed: 20
+  isMoving: 0
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -238,6 +239,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 096980c7f06ee9e45920898363f4d0f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSprint: 0
+  currentStamina: 100
+  maxStamina: 100
+  recoveryTime: 0
+  recoveryTick: 1
 --- !u!1001 &3402757749003050972
 PrefabInstance:
   m_ObjectHideFlags: 0
